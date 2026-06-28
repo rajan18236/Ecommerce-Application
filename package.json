@@ -1,5 +1,26 @@
 {
   "dependencies": {
-    "express": "^5.2.1"
-  }
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.7.3"
+  },
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rajan18236/Ecommerce-Application.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rajan18236/Ecommerce-Application/issues"
+  },
+  "homepage": "https://github.com/rajan18236/Ecommerce-Application#readme"
 }
