@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel");
 const bcrypt = require('bcrypt');
 const getToken = require("../ulits/getToken")
+const { setTokenOnRedis, removeTokenFromRedis } = require("../ulits/setTokenOnRedis")
 
 const registerUser = async (req, res) => {
     try {
@@ -34,18 +35,20 @@ const registerUser = async (req, res) => {
 
         // Generate tokens
         const { accessToken, refreshToken } = getToken(newUser._id);
-
+        setTokenOnRedis(newUser._id, refreshToken)
         // Store cookies
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
+            maxAge: 15 * 60 * 1000,
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60,
         });
 
         return res.status(201).json({
@@ -85,18 +88,19 @@ const loginUser = async (req, res) => {
             else if (result) {
                 // Generate tokens
                 const { accessToken, refreshToken } = getToken(user._id);
-
+                setTokenOnRedis(user._id, refreshToken)
                 // Store cookies
                 res.cookie("accessToken", accessToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
                     sameSite: "strict",
+                    maxAge: 15 * 60 * 1000,
                 });
-
                 res.cookie("refreshToken", refreshToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
                     sameSite: "strict",
+                    maxAge: 7 * 24 * 60 * 60,
                 });
                 return res.status(201).json({
                     success: true,
@@ -108,15 +112,26 @@ const loginUser = async (req, res) => {
                     },
                 });
             }
-            else{
-                res.status(401).json({message:"User not found"}) 
+            else {
+                res.status(401).json({ message: "User not found" })
             }
         })
 
     } catch (error) {
-console.log("Login user error:",error.message);
-res.status(500).json({message:"Internal server error"})
+        console.log("Login user error:", error.message);
+        res.status(500).json({ message: "Internal server error" })
 
     }
 }
-module.exports = {registerUser,loginUser}
+
+const logoutUser = async (req, res) => {
+    try {
+        removeTokenFromRedis(req.user._id)
+        res.clearCookie('accessToken')
+        res.clearCookie('refreshToken')
+        res.json({ message: "Logout successfully" })
+    } catch (error) {
+        res.status(500).json({ message: "Server error" })
+    }
+}
+module.exports = { registerUser, loginUser, logoutUser }

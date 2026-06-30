@@ -1,21 +1,33 @@
 const productModel = require("../models/productModel");
+const cloudinary = require("../config/cloudinaryConfig");
 
 const createProduct = async (req, res) => {
     try {
         const { productName, price, description, image, category } = req.body;
-        if (!productName || !price || !description || !image || !category) {
-            return res.status(500).json({ message: "All fields are required" })
+
+        if (!productName || price == null || !description || !image || !category) {
+            return res.status(400).json({ message: "All fields are required" });
         }
+
+
+        let cloudinaryRespones = await cloudinary.uploader.upload(image, { folder: "products" })
         const product = await productModel.create({
             productName,
-            image,
+            image: cloudinaryRespones.secure_url,
             price,
             description,
-            category
-        })
-        res.statu(200).json({ message: "Product created successfully" })
+            category,
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Product created successfully",
+            product,
+        });
     } catch (error) {
-        console.log("Create product error:", error.message)
-        res.status(500).json({ message: "Internal server error" })
+        console.error("Create product error:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
+
+module.exports = { createProduct }
