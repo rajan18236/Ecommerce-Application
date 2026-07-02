@@ -77,7 +77,7 @@ const loginUser = async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({ message: 'All fields are required' })
         }
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ email }) || await adminModel.findOne({ fullName: email });
         if (!user) {
             return res.status(401).json({ message: "User not found" });
         }
