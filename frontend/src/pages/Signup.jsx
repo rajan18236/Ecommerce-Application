@@ -1,29 +1,22 @@
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, UserRound } from "lucide-react";
+import { useContext } from "react";
 import { useState } from "react";
+import { authContext } from "../context/GlobalContext";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-  });
+  const { signUpUserData, setSignUpUserData, fetchUserRegistration } = useContext(authContext);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
-
-    console.log(formData);
-
-    // API Call Here
-  };
+    const result = await fetchUserRegistration();
+    setResult(result);
+    setIsLoading(false);
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-5 mt-20">
@@ -55,8 +48,8 @@ const Signup = () => {
           </p>
 
           <form
-            onSubmit={handleSubmit}
             className="space-y-5"
+            onSubmit={handleSubmit}
           >
 
             {/* Full Name */}
@@ -72,8 +65,10 @@ const Signup = () => {
                   type="text"
                   name="fullName"
                   placeholder="John Doe"
-                  value={formData.fullName}
-                  onChange={handleChange}
+                  value={signUpUserData.fullName}
+                  onChange={(e) =>
+                    setSignUpUserData({ ...signUpUserData, fullName: e.target.value })
+                  }
                   className="w-full p-4 outline-none"
                   required
                 />
@@ -93,8 +88,10 @@ const Signup = () => {
                   type="email"
                   name="email"
                   placeholder="john@gmail.com"
-                  value={formData.email}
-                  onChange={handleChange}
+                  value={signUpUserData.email}
+                  onChange={(e) =>
+                    setSignUpUserData({ ...signUpUserData, email: e.target.value })
+                  }
                   className="w-full p-4 outline-none"
                   required
                 />
@@ -114,8 +111,10 @@ const Signup = () => {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="********"
-                  value={formData.password}
-                  onChange={handleChange}
+                  value={signUpUserData.password}
+                  onChange={(e) =>
+                    setSignUpUserData({ ...signUpUserData, password: e.target.value })
+                  }
                   className="w-full p-4 outline-none"
                   required
                 />
@@ -134,14 +133,55 @@ const Signup = () => {
                 </button>
               </div>
             </div>
+            <div>
+              <label className=" font-medium">
+                Choose Your Role
+              </label>
 
-            {/* Button */}
+              <div className="flex items-center border rounded-xl px-4 focus-within:ring-2 focus-within:ring-black">
+                <UserRound size={20} className="text-gray-400 mr-3" />
+
+                <select
+                  name="role"
+
+                  onChange={(e) =>
+                    setSignUpUserData({ ...signUpUserData, role: e.target.value })
+                  }
+                  className="w-full py-4 outline-none bg-transparent cursor-pointer "
+                  value={signUpUserData.role}
+                >
+                  <option value="customer">
+                    Customer / Buyer
+                  </option>
+
+                  <option value="seller">
+                    Vendor / Seller
+                  </option>
+                </select>
+              </div>
+            </div>
+            {result && (
+              <div
+                className={`mt-4 p-4 rounded-xl ${result.success
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+                  }`}
+              >
+                {result.message}
+              </div>
+            )}
+
             <button
-              className="w-full bg-black text-white py-4 rounded-xl hover:bg-gray-800 transition"
+              type="submit"
+              disabled={isLoading}
+              className={`w-full py-4 rounded-xl transition
+  ${isLoading
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-black hover:bg-gray-800 text-white"
+                }`}
             >
-              Create Account
+              {isLoading ? "Creating Account..." : "Create Account"}
             </button>
-
           </form>
 
           {/* Login */}

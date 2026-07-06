@@ -5,7 +5,6 @@ const {isLoggedIn} = require("../middlewares/authMiddleware");
 
 
 router.post("/register",registerUser);
-router.post("/register/admin",createAdmin);
 router.post("/login",loginUser);
 router.get("/logout",isLoggedIn,logoutUser);
 

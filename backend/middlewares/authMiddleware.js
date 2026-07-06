@@ -31,7 +31,7 @@ const isLoggedIn = async (req, res, next) => {
 
 const isAdmin = async (req, res, next) => {
     try {
-        if (!req.user || req.user.role !== "admin") {
+        if (!req.user || req.user.role !== "seller") {
             return res.status(403).json({
                 message: "Admin access only."
             });

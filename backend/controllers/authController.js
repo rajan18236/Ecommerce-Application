@@ -5,7 +5,7 @@ const { setTokenOnRedis, removeTokenFromRedis } = require("../ulits/setTokenOnRe
 
 const registerUser = async (req, res) => {
     try {
-        const { email, fullName, password } = req.body;
+        const { email, fullName, password, role } = req.body;
 
         // Validate input
         if (!fullName || !email || !password) {
@@ -30,7 +30,8 @@ const registerUser = async (req, res) => {
         const newUser = await userModel.create({
             fullName,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: role || "customer" // Default role is "customer" if not provided
         });
 
         // Generate tokens

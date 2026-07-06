@@ -1,48 +1,35 @@
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { authContext } from "../context/GlobalContext";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const { loginUserData, setLoginUserData, fetchUserLogin } = useContext(authContext);
 
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-  });
 
   const handleChange = (e) => {
-    setLoginData({
-      ...loginData,
+    setLoginUserData({
+      ...loginUserData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
-
-    console.log(loginData);
-
+    let result = await fetchUserLogin();
+    setResult(result);
+    setIsLoading(false);
     // Login API Call Here
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-5 mt-10">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-5 mt-10 ">
       <div className="max-w-6xl w-full bg-white rounded-3xl shadow-xl overflow-hidden grid md:grid-cols-2">
 
         {/* Left Section */}
-        <div className="hidden md:flex bg-black text-white items-center justify-center p-10">
-          <div>
-            <h1 className="text-5xl font-bold leading-tight">
-              Welcome Back
-            </h1>
-
-            <p className="mt-5 text-gray-300">
-              Login to access your account, track orders, manage your wishlist,
-              and continue shopping.
-            </p>
-          </div>
-        </div>
-
-        {/* Right Section */}
         <div className="p-10">
 
           <h2 className="text-3xl font-bold mb-2">
@@ -68,9 +55,9 @@ const Login = () => {
                   type="email"
                   name="email"
                   placeholder="john@gmail.com"
-                  value={loginData.email}
+                  value={loginUserData.email}
                   onChange={handleChange}
-                  className="w-full p-4 outline-none"
+                  className="w-full p-4 outline-none bg-transparent"
                   required
                 />
               </div>
@@ -89,7 +76,7 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="********"
-                  value={loginData.password}
+                  value={loginUserData.password}
                   onChange={handleChange}
                   className="w-full p-4 outline-none"
                   required
@@ -107,14 +94,19 @@ const Login = () => {
                 </button>
               </div>
             </div>
-
+            {result && (
+              <div
+                className={`mt-4 p-4 rounded-xl ${result.success
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+                  }`}
+              >
+                {result.message}
+              </div>
+            )}
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between text-sm">
 
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" />
-                Remember Me
-              </label>
 
               <button
                 type="button"
@@ -128,9 +120,10 @@ const Login = () => {
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full bg-black text-white py-4 rounded-xl hover:bg-gray-800 transition"
+              className={`w-full  text-white py-4 rounded-xl hover:bg-zinc-900 transition ${isLoading ? "bg-gray-600" : "bg-black"}`}
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Login..." : "Login"}
             </button>
 
           </form>
@@ -145,8 +138,23 @@ const Login = () => {
 
         </div>
 
+
+        {/* Right Section */}
+
+        <div className="hidden md:flex bg-black text-white items-center justify-center p-10">
+          <div>
+            <h1 className="text-5xl font-bold leading-tight">
+              Welcome Back
+            </h1>
+
+            <p className="mt-5 text-gray-300">
+              Login to access your account, track orders, manage your wishlist,
+              and continue shopping.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </div >
   );
 };
 

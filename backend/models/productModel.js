@@ -21,6 +21,8 @@ const productSchema = mongoose.Schema({
     category: {
         type: String,
         required: true,
+        default: "Others",
+        enum: ["Electronics", "Clothing", "Books", "Home & Kitchen", "Sports & Outdoors", "Beauty & Personal Care", "Toys & Games", "Automotive", "Health & Wellness", "Others"]
     },
     isFeatured: {
         type: Boolean,
