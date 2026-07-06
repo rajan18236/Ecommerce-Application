@@ -17,7 +17,7 @@ const Navbar = () => {
             <div>
                 <ul className='flex gap-4 items-center'>
                     <Link to='/' className='hover:text-gray-400'><RiHome5Fill size={24} /></Link>
-                    <Link to='/carts' className='hover:text-gray-400'><FaShoppingCart size={24} /></Link>
+                    <Link to='/cartItem' className='hover:text-gray-400'><FaShoppingCart size={24} /></Link>
                     <Link to='/signup' className='  '>
                         <button className='hover:cursor-pointer hover:text-black flex items-center gap-1 text-gray-500 bg-white py-2 px-2 rounded-2xl'>
                             <span><BsPersonFillAdd size={24} /></span>
