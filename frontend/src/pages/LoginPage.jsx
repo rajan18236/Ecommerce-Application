@@ -1,12 +1,14 @@
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { useState, useContext } from "react";
+import { useState, useContext,useEffect } from "react";
 import { authContext } from "../context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const { loginUserData, setLoginUserData, fetchUserLogin } = useContext(authContext);
+  const navigate = useNavigate();
+  const { loginUserData, setLoginUserData, fetchUserLogin, isUserLoggedIn } = useContext(authContext);
 
 
   const handleChange = (e) => {
@@ -20,11 +22,14 @@ const Login = () => {
     setIsLoading(true);
     e.preventDefault();
     let result = await fetchUserLogin();
-    setResult(result);
-    setIsLoading(false);
+    if (result.success) {
+      setResult(result);
+      setIsLoading(false);
+      navigate("/");
+    }
     // Login API Call Here
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-5 mt-10 ">
       <div className="max-w-6xl w-full bg-white rounded-3xl shadow-xl overflow-hidden grid md:grid-cols-2">

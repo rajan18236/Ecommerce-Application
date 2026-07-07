@@ -59,6 +59,11 @@ const registerUser = async (req, res) => {
                 id: newUser._id,
                 fullName: newUser.fullName,
                 email: newUser.email,
+                role: newUser.role
+            },
+            tokens: {
+                accessToken,
+                refreshToken,
             },
         });
 
@@ -110,6 +115,11 @@ const loginUser = async (req, res) => {
                         id: user._id,
                         fullName: user.fullName,
                         email: user.email,
+                        role: user.role
+                    },
+                    tokens: {
+                        accessToken,
+                        refreshToken,
                     },
                 });
             }

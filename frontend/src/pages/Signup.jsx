@@ -2,11 +2,13 @@ import { Eye, EyeOff, Mail, Lock, User, UserRound } from "lucide-react";
 import { useContext } from "react";
 import { useState } from "react";
 import { authContext } from "../context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const navigate = useNavigate();
 
   const { signUpUserData, setSignUpUserData, fetchUserRegistration } = useContext(authContext);
 
@@ -14,8 +16,12 @@ const Signup = () => {
     setIsLoading(true);
     e.preventDefault();
     const result = await fetchUserRegistration();
-    setResult(result);
-    setIsLoading(false);
+    if (result.success) {
+      setResult(result);
+      setIsLoading(false);
+      navigate("/");
+    }
+
   }
 
   return (

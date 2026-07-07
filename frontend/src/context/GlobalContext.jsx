@@ -1,10 +1,11 @@
-import { useState,createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import axios from 'axios';
 
 export const authContext = createContext();
 
 
 const GlobalContext = ({ children }) => {
+    
     const [signUpUserData, setSignUpUserData] = useState({
         fullName: "",
         email: "",
@@ -15,7 +16,7 @@ const GlobalContext = ({ children }) => {
         email: "",
         password: "",
     });
-
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const fetchUserRegistration = async () => {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/register", {
@@ -25,13 +26,22 @@ const GlobalContext = ({ children }) => {
                 role: signUpUserData.role
             });
             const result = await res.data
-            setSignUpUserData({
-                fullName: "",
-                email: "",
-                password: "",
-                role: "customer",
-            });
-            return result;
+            if (result.success) {
+                setSignUpUserData({
+                    fullName: "",
+                    email: "",
+                    password: "",
+                    role: "customer",
+                });
+                localStorage.setItem("accessToken", result.tokens.accessToken);
+                localStorage.setItem("refreshToken", result.tokens.refreshToken);
+                localStorage.setItem("userRole", result.user.role);
+                setIsUserLoggedIn(true);
+                return result;
+            } else {
+                throw new Error("Registration failed");
+            }
+
         } catch (error) {
             console.error("Error registering user:", error.message);
             if (error.status === 409) {
@@ -46,13 +56,28 @@ const GlobalContext = ({ children }) => {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/login", { email: loginUserData.email, password: loginUserData.password });
             const result = await res.data;
-            setLoginUserData({ email: "", password: "" });
-            return result;
+            if (result.success) {
+                setLoginUserData({ email: "", password: "" });
+                localStorage.setItem("accessToken", result.tokens.accessToken);
+                localStorage.setItem("refreshToken", result.tokens.refreshToken);
+                localStorage.setItem("userRole", result.user.role);
+                setIsUserLoggedIn(true);
+                return result;
+            } else {
+                throw new Error("Login failed");
+            }
+
         } catch (error) {
             console.error("Error logging in user:", error.message);
             return { success: false, message: "Login failed" };
         }
     }
+    useEffect(() => {
+        const accessToken = localStorage.getItem("accessToken");
+        if (accessToken) {
+            setIsUserLoggedIn(true);
+        }
+    }, []);
 
     return (
         <div>
@@ -60,9 +85,11 @@ const GlobalContext = ({ children }) => {
                 signUpUserData,
                 setSignUpUserData,
                 fetchUserRegistration,
-                loginUserData, 
+                loginUserData,
                 setLoginUserData,
-                fetchUserLogin
+                fetchUserLogin,
+                isUserLoggedIn,
+                setIsUserLoggedIn
             }}>
                 {children}
             </authContext.Provider>
