@@ -10,12 +10,12 @@ const Signup = () => {
   const [result, setResult] = useState(null);
   const navigate = useNavigate();
 
-  const { signUpUserData, setSignUpUserData, fetchUserRegistration } = useContext(authContext);
+  const { signUpUserData, setSignUpUserData, userRegistration } = useContext(authContext);
 
   const handleSubmit = async (e) => {
     setIsLoading(true);
     e.preventDefault();
-    const result = await fetchUserRegistration();
+    const result = await userRegistration();
     if (result.success) {
       setResult(result);
       setIsLoading(false);

@@ -8,7 +8,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const navigate = useNavigate();
-  const { loginUserData, setLoginUserData, fetchUserLogin, isUserLoggedIn } = useContext(authContext);
+  const { loginUserData, setLoginUserData, userLogin, isUserLoggedIn } = useContext(authContext);
 
 
   const handleChange = (e) => {
@@ -21,13 +21,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     setIsLoading(true);
     e.preventDefault();
-    let result = await fetchUserLogin();
+    let result = await userLogin();
     if (result.success) {
       setResult(result);
       setIsLoading(false);
       navigate("/");
     }
-    // Login API Call Here
   };
   
   return (
@@ -125,7 +124,7 @@ const Login = () => {
             {/* Login Button */}
             <button
               type="submit"
-              className={`w-full  text-white py-4 rounded-xl hover:bg-zinc-900 transition ${isLoading ? "bg-gray-600" : "bg-black"}`}
+              className={`w-full  text-white py-4 rounded-xl hover:bg-zinc-900 transition ${isLoading ? "bg-gray-600 cursor-not-allowed" : "bg-black"}`}
               disabled={isLoading}
             >
               {isLoading ? "Login..." : "Login"}

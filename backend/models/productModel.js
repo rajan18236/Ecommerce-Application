@@ -27,10 +27,15 @@ const productSchema = mongoose.Schema({
     isFeatured: {
         type: Boolean,
         default: false
+    },
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+        required: true,
     }
 }, {
     timestamp: true
 }
 )
 
-module.exports = mongoose.model("product",productSchema)
+module.exports = mongoose.model("product", productSchema)

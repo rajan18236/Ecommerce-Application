@@ -1,6 +1,6 @@
 const redis = require("../config/redisConfig")
 const setTokenOnRedis = async (userId, refreshToken) => {
-    await redis.set(`refreshToken:${userId}`, refreshToken, "EX", 7 * 20 * 60 * 60)
+    await redis.set(`refreshToken:${userId}`, refreshToken, "EX", 7 * 24 * 60 * 60)
 }
 
 const removeTokenFromRedis = async (userId) => {

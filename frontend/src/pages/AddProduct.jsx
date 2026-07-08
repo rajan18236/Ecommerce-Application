@@ -1,27 +1,12 @@
 import { Image, Package, DollarSign, FileText, List } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { productContext } from "../context/GlobalContext";
 
-const categories = [
-  "Men",
-  "Women",
-  "Electronics",
-  "Shoes",
-  "Beauty",
-  "Sports",
-  "Books",
-  "Toys",
-  'Others'
-];
+const categories = ["Electronics", "Clothing", "Books", "Home & Kitchen", "Sports & Outdoors", "Beauty & Personal Care", "Toys & Games", "Automotive", "Health & Wellness", "Others"]
 
 const AdminAddProduct = () => {
-  const [product, setProduct] = useState({
-    productName: "",
-    price: "",
-    description: "",
-    image: "",
-    category: "",
-  });
-
+  const { product, setProduct, addProduct, } = useContext(productContext)
+  const [result, setResult] = useState(null)
   const handleChange = (e) => {
     setProduct({
       ...product,
@@ -29,12 +14,26 @@ const AdminAddProduct = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    let result = await addProduct()
+    setResult(result)
+  };
 
-    console.log(product);
 
-    // API Call Here
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setProduct({
+        ...product,
+        image: reader.result, // Base64 string
+      });
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -137,7 +136,7 @@ const AdminAddProduct = () => {
           {/* Image URL */}
           <div>
             <label className="font-medium">
-              Image 
+              Image
             </label>
 
             <div className="flex items-center border rounded-xl mt-2 px-4">
@@ -146,23 +145,13 @@ const AdminAddProduct = () => {
               <input
                 type="file"
                 name="image"
-                value={product.image}
-                onChange={handleChange}
-                placeholder="https://image-url.com"
+                onChange={handleImage}
+                placeholder="Upload Image"
                 className="w-full p-4 outline-none"
                 required
               />
             </div>
           </div>
-
-          {/* Preview Image */}
-          {product.image && (
-            <img
-              src={product.image}
-              alt="Preview"
-              className="w-48 h-48 rounded-xl object-cover border"
-            />
-          )}
 
           {/* Description */}
           <div>
@@ -189,9 +178,20 @@ const AdminAddProduct = () => {
 
             </div>
           </div>
+          {result && (
+            <div
+              className={`mt-4 p-4 rounded-xl ${result.success
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+                }`}
+            >
+              {result.message}
+            </div>
+          )}
 
           {/* Button */}
           <button
+            type="submit"
             className="w-full bg-black text-white py-4 rounded-xl hover:bg-gray-800 duration-300"
           >
             Create Product

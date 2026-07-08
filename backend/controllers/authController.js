@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const adminModel = require("../models/adminModel");
 const bcrypt = require('bcrypt');
 const getToken = require("../ulits/getToken")
 const { setTokenOnRedis, removeTokenFromRedis } = require("../ulits/setTokenOnRedis")
@@ -41,14 +42,14 @@ const registerUser = async (req, res) => {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 15 * 60 * 1000,
+            sameSite: "lax",
+            maxAge: 15 * 60 * 60,
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60,
         });
 
@@ -99,13 +100,13 @@ const loginUser = async (req, res) => {
                 res.cookie("accessToken", accessToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
-                    sameSite: "strict",
-                    maxAge: 15 * 60 * 1000,
+                    sameSite: "lax",
+                    maxAge: 15 * 60 * 60,
                 });
                 res.cookie("refreshToken", refreshToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
-                    sameSite: "strict",
+                    sameSite: "lax",
                     maxAge: 7 * 24 * 60 * 60,
                 });
                 return res.status(201).json({
@@ -145,4 +146,6 @@ const logoutUser = async (req, res) => {
         res.status(500).json({ message: "Server error" })
     }
 }
+
+
 module.exports = { registerUser, loginUser, logoutUser }

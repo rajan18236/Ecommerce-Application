@@ -11,13 +11,11 @@ import { useContext, useEffect } from 'react';
 
 const Navbar = () => {
     const navigate = useNavigate();
-    const userRole = localStorage.getItem("userRole");
-    const { isUserLoggedIn, setIsUserLoggedIn } = useContext(authContext);
-    const handleLogout = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userRole");
-        setIsUserLoggedIn(false);
+    const { userLogout, userInfo, isUserLoggedIn, setIsUserLoggedIn } = useContext(authContext);
+
+    const isSeller = userInfo?.role === "seller"
+    const handleLogout = async () => {
+        await userLogout();
         navigate("/");
     }
 
@@ -29,13 +27,16 @@ const Navbar = () => {
             </div>
             <div>
                 <ul className="flex gap-4 items-center">
-                    {isUserLoggedIn ? (
+
+
+
+                    {isUserLoggedIn ?
                         <>
                             <Link to="/" className="hover:text-gray-400 flex flex-col items-center">
                                 <RiHome5Fill size={24} />
                                 <span className="text-sm">Home</span>
                             </Link>
-                            {userRole === "seller" ? (
+                            {isSeller ? (
                                 <Link to="/addproduct" className="hover:text-gray-400 flex flex-col items-center">
                                     <MdAddBusiness size={24} />
                                     <span className="text-sm">Add Product</span>
@@ -43,10 +44,13 @@ const Navbar = () => {
                             ) :
                                 <Link to="/cartItem" className="hover:text-gray-400">
                                     <FaShoppingCart size={24} />
-
+                                    <span className="text-sm">Cart</span>
                                 </Link>
                             }
-
+                            <select name="profile" id="profile" className='text-white bg-gray-800 outline-none'>
+                                <option value="name">{userInfo?userInfo.fullName:"profile"}</option>
+                                <option value="">maharjan</option>
+                            </select>
                             <button
                                 onClick={handleLogout}
                                 className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition"
@@ -54,7 +58,9 @@ const Navbar = () => {
                                 Logout
                             </button>
                         </>
-                    ) : (
+
+
+                        :
                         <>
                             <Link to="/signup">
                                 <button className="flex items-center gap-2 text-gray-500 bg-white py-2 px-4 rounded-2xl hover:text-black transition">
@@ -69,8 +75,10 @@ const Navbar = () => {
                                     Login
                                 </button>
                             </Link>
+
                         </>
-                    )}
+                    }
+
                 </ul>
             </div>
         </div>
