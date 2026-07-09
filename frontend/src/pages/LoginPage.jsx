@@ -22,9 +22,9 @@ const Login = () => {
     setIsLoading(true);
     e.preventDefault();
     let result = await userLogin();
+    setResult(result);
+    setIsLoading(false);
     if (result.success) {
-      setResult(result);
-      setIsLoading(false);
       navigate("/");
     }
   };

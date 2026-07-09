@@ -6,16 +6,21 @@ import Signup from './pages/Signup'
 import Login from './pages/LoginPage'
 import Cart from './pages/Cart'
 import AddProduct from './pages/AddProduct'
+import { useContext } from 'react'
+import { authContext } from './context/GlobalContext'
+import Category from './pages/Category'
 const App = () => {
+  const { isUserLoggedIn } = useContext(authContext)
   return (
     <div>
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/cartItem' element={<Cart />} />
+        <Route path='/cartItem' element={isUserLoggedIn ? <Cart /> : <Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/addproduct' element={<AddProduct />} />
+        <Route path='/category' element={<Category />} />
+        <Route path='/addproduct' element={isUserLoggedIn ? <AddProduct /> : <Login />} />
       </Routes>
     </div>
   )

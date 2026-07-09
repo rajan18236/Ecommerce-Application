@@ -1,11 +1,13 @@
 import { Image, Package, DollarSign, FileText, List } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { productContext } from "../context/GlobalContext";
 
 const categories = ["Electronics", "Clothing", "Books", "Home & Kitchen", "Sports & Outdoors", "Beauty & Personal Care", "Toys & Games", "Automotive", "Health & Wellness", "Others"]
 
 const AdminAddProduct = () => {
   const { product, setProduct, addProduct, } = useContext(productContext)
+  const [isLoading, setIsLoading] = useState(false)
+  const ref = useRef(null)
   const [result, setResult] = useState(null)
   const handleChange = (e) => {
     setProduct({
@@ -15,9 +17,14 @@ const AdminAddProduct = () => {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true)
     e.preventDefault();
     let result = await addProduct()
     setResult(result)
+    setIsLoading(false)
+    if (result.success) {
+      ref.current.value = ""
+    }
   };
 
 
@@ -133,7 +140,7 @@ const AdminAddProduct = () => {
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Image */}
           <div>
             <label className="font-medium">
               Image
@@ -145,9 +152,11 @@ const AdminAddProduct = () => {
               <input
                 type="file"
                 name="image"
+                ref={ref}
                 onChange={handleImage}
                 placeholder="Upload Image"
                 className="w-full p-4 outline-none"
+                accept="image/*"
                 required
               />
             </div>
@@ -192,7 +201,8 @@ const AdminAddProduct = () => {
           {/* Button */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-4 rounded-xl hover:bg-gray-800 duration-300"
+            className={`w-full bg-black text-white py-4 rounded-xl hover:bg-gray-800 duration-300 ${isLoading ? 'cursor-not-allowed bg-zinc-600' : 'cursor-pointer'}`}
+            disabled={isLoading}
           >
             Create Product
           </button>

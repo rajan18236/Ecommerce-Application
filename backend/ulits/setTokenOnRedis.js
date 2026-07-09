@@ -7,4 +7,8 @@ const removeTokenFromRedis = async (userId) => {
     await redis.del(`refreshToken:${userId}`)
 }
 
+// const getTokenFromRedis = async (userId)=>{
+//     await redis.get(`refreshToken:${userId}`)
+// }
+
 module.exports = {setTokenOnRedis,removeTokenFromRedis}

@@ -48,7 +48,7 @@ const createProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await productModel.find()
+        const products = await productModel.find().populate("seller")
         res.status(200).json({
             success: true,
             message: "Successfully get all products ",
@@ -59,6 +59,23 @@ const getAllProducts = async (req, res) => {
         console.log("Error on getallProducts:", error.message)
         return res.status(404).json({ success: false, message: "Internal server error" })
     }
-}
+};
 
-module.exports = { createProduct, getAllProducts }
+const getProductCategory = async (req, res) => {
+    try {
+        const { category } = req.params
+        if (!category) {
+            return res.status(400).json({ success: false, message: "Category Not found" })
+        }
+        const products = await productModel.find({ category }).populate("seller")
+        res.status(201).json({
+            success: true,
+            message: 'Request Successfully',
+            products
+        })
+    } catch (error) {
+        console.log("Error on getProductCategory:", error.message);
+        return res.status(500).json({ success: false, message: 'Internal server error' })
+    }
+};
+module.exports = { createProduct, getAllProducts, getProductCategory }

@@ -101,7 +101,7 @@ const loginUser = async (req, res) => {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
                     sameSite: "lax",
-                    maxAge: 15 * 60 * 60,
+                    // maxAge: 15 * 60 * 60,
                 });
                 res.cookie("refreshToken", refreshToken, {
                     httpOnly: true,
@@ -134,7 +134,7 @@ const loginUser = async (req, res) => {
         res.status(500).json({ message: "Internal server error" })
 
     }
-}
+};
 
 const logoutUser = async (req, res) => {
     try {
@@ -145,7 +145,6 @@ const logoutUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error" })
     }
-}
-
+};
 
 module.exports = { registerUser, loginUser, logoutUser }

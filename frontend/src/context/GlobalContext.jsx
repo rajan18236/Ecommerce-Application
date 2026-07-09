@@ -17,8 +17,10 @@ const GlobalContext = ({ children }) => {
         email: "",
         password: "",
     });
-    const [userInfo, setUserInfo] = useState({})
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
+    const [userInfo, setUserInfo] = useState({});
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [caterogyItems, setCaterogyItems] = useState([]);
     const userRegistration = async () => {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/register", {
@@ -64,10 +66,7 @@ const GlobalContext = ({ children }) => {
                 setIsUserLoggedIn(true)
                 console.log(result);
                 return result;
-            } else {
-                throw error("Login failed");
             }
-
         } catch (error) {
             console.error("Error logging in user:", error.message);
             return { success: false, message: "Login failed" };
@@ -90,6 +89,32 @@ const GlobalContext = ({ children }) => {
         }
     };
 
+    const addToCart = async (productId) => {
+        try {
+            const res = await axios.patch(`http://localhost:5000/api/cart/addToCart/${productId}`)
+            const result = await res.data;
+            console.log(result);
+            return result
+        } catch (error) {
+            console.error("Error on addToCart:", error.message);
+            return ({ success: false, message: 'Fail to add' })
+        }
+
+    }
+
+    const removeFromCart = async (product) => {
+        try {
+            const res = await axios.delete('http://localhost:5000/api/cart/removeFromCart', {
+                product
+            })
+            const result = await res.data;
+            console.log(result);
+            return result
+        } catch (error) {
+            console.error("Error on removeToCart:", error.message);
+            return ({ success: false, message: 'Fail to remove' })
+        }
+    }
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -116,7 +141,6 @@ const GlobalContext = ({ children }) => {
         checkAuth();
         fetchProducts();
     }, []);
-
 
     const [product, setProduct] = useState({
         productName: "",
@@ -162,10 +186,23 @@ const GlobalContext = ({ children }) => {
     const fetchProducts = async () => {
         try {
             const res = await axios.get(`http://localhost:5000/api/product/getAll`)
-            const result = await res.data
-            console.log(result);
+            const result = await res.data;
+            setFeaturedProducts(result.products)
+            return result
         } catch (error) {
             console.error('error on fetchProduct:', error.message)
+        }
+
+    }
+
+    const getProductsByCategory = async (category) => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/product/category/${category}`)
+            const result = await res.data;
+            setCaterogyItems(result.products)
+            return result
+        } catch (error) {
+            console.error('Error on getProductByCategory:', error.message);
         }
 
     }
@@ -181,14 +218,21 @@ const GlobalContext = ({ children }) => {
                 userLogout,
                 userInfo,
                 setUserInfo,
-                isUserLoggedIn, setIsUserLoggedIn
+                isUserLoggedIn, 
+                setIsUserLoggedIn,
+                addToCart,
+                removeFromCart,
             }}>
                 <productContext.Provider value={{
                     product,
                     setProduct,
-
-                    // fetchProducts,
                     addProduct,
+                    getProductsByCategory,
+                    caterogyItems,
+                    setCaterogyItems,
+                    fetchProducts,
+                    featuredProducts,
+                    setFeaturedProducts,
                     // updateProduct,
                     // deleteProduct
                 }}>
