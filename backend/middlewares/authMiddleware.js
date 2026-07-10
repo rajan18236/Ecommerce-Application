@@ -3,8 +3,10 @@ const jwt = require("jsonwebtoken")
 
 
 const isLoggedIn = async (req, res, next) => {
-    
+
     try {
+        console.log(req.cookies.accessToken,"accesstoken")
+        console.log(req.cookies.refreshToken,"refreshtoken")
         const accessToken = req.cookies.accessToken;
 
         if (!accessToken) {

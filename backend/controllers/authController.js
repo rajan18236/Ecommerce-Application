@@ -43,14 +43,14 @@ const registerUser = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 15 * 60 * 60,
+            maxAge: 15 * 60 * 60 * 1000,
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(201).json({
@@ -101,13 +101,13 @@ const loginUser = async (req, res) => {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
                     sameSite: "lax",
-                    // maxAge: 15 * 60 * 60,
+                    maxAge: 15 * 60 * 60 * 1000,
                 });
                 res.cookie("refreshToken", refreshToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
                     sameSite: "lax",
-                    maxAge: 7 * 24 * 60 * 60,
+                    maxAge: 7 * 24 * 60 * 60 * 1000,
                 });
                 return res.status(201).json({
                     success: true,
@@ -141,6 +141,8 @@ const logoutUser = async (req, res) => {
         removeTokenFromRedis(req.user._id)
         res.clearCookie('accessToken')
         res.clearCookie('refreshToken')
+        console.log("logout");
+        
         res.json({ message: "Logout successfully" })
     } catch (error) {
         res.status(500).json({ message: "Server error" })

@@ -39,8 +39,6 @@ const GlobalContext = ({ children }) => {
                 })
                 setUserInfo(result.user)
                 setIsUserLoggedIn(true)
-
-                console.log(result);
                 return result;
             } else {
                 throw new Error("Registration failed");
@@ -64,7 +62,6 @@ const GlobalContext = ({ children }) => {
                 setLoginUserData({ email: "", password: "" })
                 setUserInfo(result.user)
                 setIsUserLoggedIn(true)
-                console.log(result);
                 return result;
             }
         } catch (error) {
@@ -82,6 +79,7 @@ const GlobalContext = ({ children }) => {
                     withCredentials: true,
                 }
             )
+
             setUserInfo({})
             setIsUserLoggedIn(false)
         } catch (error) {
@@ -108,7 +106,6 @@ const GlobalContext = ({ children }) => {
                 product
             })
             const result = await res.data;
-            console.log(result);
             return result
         } catch (error) {
             console.error("Error on removeToCart:", error.message);
@@ -116,29 +113,9 @@ const GlobalContext = ({ children }) => {
         }
     }
 
+   
+
     useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const res = await axios.get(
-                    "http://localhost:5000/api/auth/me",
-                    {
-                        withCredentials: true,
-                    }
-                );
-
-                if (res.data.success) {
-                    setUserInfo(res.data.user)
-                    setIsUserLoggedIn(true)
-                } else {
-                    setIsUserLoggedIn(false)
-                }
-
-            } catch (err) {
-                console.error('Error on check auth:', err.message);
-
-            }
-        };
-        checkAuth();
         fetchProducts();
     }, []);
 
@@ -218,9 +195,9 @@ const GlobalContext = ({ children }) => {
                 userLogout,
                 userInfo,
                 setUserInfo,
-                isUserLoggedIn, 
+                isUserLoggedIn,
                 setIsUserLoggedIn,
-                addToCart,
+
                 removeFromCart,
             }}>
                 <productContext.Provider value={{
@@ -233,6 +210,7 @@ const GlobalContext = ({ children }) => {
                     fetchProducts,
                     featuredProducts,
                     setFeaturedProducts,
+                    addToCart,
                     // updateProduct,
                     // deleteProduct
                 }}>
