@@ -2,19 +2,20 @@ const userModel = require("../models/userModel");
 
 const addToCart = async (req, res) => {
     try {
-        let { product } = req.params
+        let { product } = req.body
         let user = await userModel.findById(req.user._id)
-        if (user.cartsItems.indexOf(product) === -1) {
-            user.cartsItems.push({
+        let idx = user.cartsItem.findIndex(item => item.productId == product)
+        if (idx) {
+            user.cartsItem.splice(idx, 1)
+            await user.save();
+            return res.status(200).json({ success: true, message: "product removed from cart" })
+        } else {
+            user.cartsItem.push({
                 productId: product,
-                productQty: 1,
-
+                productQty: 1
             })
             await user.save();
-            return res.status(200).json({ success: true, message: "product add to cart" })
-        } else {
-            user.cartsItems.splice(user.cartsItems.indexOf(product), 1)
-            return res.status(202).json({ success: true, message: "product remove from cart" })
+            return res.status(202).json({ success: true, message: "product added on cart" })
         }
     } catch (error) {
         console.error("Error on addToCart:", error.message);
@@ -43,4 +44,4 @@ const removeFromCart = async (req, res) => {
     }
 }
 
-module.exports = { addToCart,removeFromCart }
+module.exports = { addToCart, removeFromCart }

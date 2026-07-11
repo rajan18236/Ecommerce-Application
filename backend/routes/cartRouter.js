@@ -4,7 +4,7 @@ const {isLoggedIn} = require("../middlewares/authMiddleware")
 const {addToCart, removeFromCart} = require("../controllers/cartController")
 
 
-router.patch("/addToCart/:product", isLoggedIn, addToCart);
+router.put("/addToCart", isLoggedIn, addToCart);
 router.delete("/removeFromCart",isLoggedIn,removeFromCart);
 // router.patch()
 module.exports = router

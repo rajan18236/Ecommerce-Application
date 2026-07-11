@@ -89,7 +89,7 @@ const GlobalContext = ({ children }) => {
 
     const addToCart = async (productId) => {
         try {
-            const res = await axios.patch(`http://localhost:5000/api/cart/addToCart/${productId}`)
+            const res = await axios.put(`http://localhost:5000/api/cart/addToCart`, { product: productId },{withCredentials:true})
             const result = await res.data;
             console.log(result);
             return result
@@ -113,7 +113,7 @@ const GlobalContext = ({ children }) => {
         }
     }
 
-   
+
 
     useEffect(() => {
         fetchProducts();
