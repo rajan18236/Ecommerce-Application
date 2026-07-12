@@ -1,14 +1,17 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { productContext } from '../context/GlobalContext'
 
 const Category = () => {
-    const {caterogyItems,setCaterogyItems} = useContext(productContext);
+  const { caterogyItems, setCaterogyItems, getProductsByCategory } = useContext(productContext);
+  console.log(caterogyItems);
+
+  
   return (
-     <section className="max-w-7xl mx-auto px-5 py-16 mt-10 ">
-      <h1 className="text-gray-800 text-2xl font-semibold uppercase tracking-widest mb-4">{caterogyItems[0].category}</h1>
+    <section className="max-w-7xl mx-auto px-5 py-16 mt-10 ">
+      <h1 className="text-gray-800 text-2xl font-semibold uppercase tracking-widest mb-4"></h1>
       {/* Product Grid */}
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {caterogyItems.map((item,idx) => (
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {caterogyItems.map((item, idx) => (
           <div
             key={idx}
             className="bg-white rounded-3xl overflow-hidden shadow hover:shadow-xl duration-300 group"
@@ -25,15 +28,15 @@ const Category = () => {
             {/* Details */}
             <div className="p-5">
               <p className="text-sm text-orange-500">
-                @{item.seller.fullName}
+                @{item.seller?.item.seller.fullName}
               </p>
 
               <div className="flex justify-between items-center gap-3">
-              <h3 className="font-semibold text-lg mt-1">
-                {item.productName}
-              </h3>
+                <h3 className="font-semibold text-lg mt-1">
+                  {item.productName}
+                </h3>
 
-              {/* Price */}
+                {/* Price */}
 
                 <span className="text-2xl font-semibold text-black">
                   ${item.price}

@@ -16,11 +16,14 @@ const Signup = () => {
     setIsLoading(true);
     e.preventDefault();
     const result = await userRegistration();
-    if (result.success) {
+    if (result) {
       setResult(result);
       setIsLoading(false);
-      navigate("/");
+      if (result.success) {
+        navigate("/");
+      }
     }
+
 
   }
 

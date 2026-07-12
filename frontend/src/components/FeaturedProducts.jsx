@@ -8,7 +8,6 @@ const FeaturedProducts = () => {
   const handleAddToCart = async (productId) => {
     await addToCart(productId)
   }
-
   return (
 
     <section className="max-w-7xl mx-auto px-5 py-16">
@@ -34,7 +33,7 @@ const FeaturedProducts = () => {
               <div className="flex justify-between">
 
                 <p className="text-sm text-orange-500">
-                  @{product.seller.fullName}
+                  @{product.seller?.product.seller.fullName}
                 </p>
                 <p className="text-sm text-orange-500">
                   #{product.category}

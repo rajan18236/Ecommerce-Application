@@ -21,6 +21,8 @@ const GlobalContext = ({ children }) => {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [caterogyItems, setCaterogyItems] = useState([]);
+    const [cartItems, setCartItems] = useState([]);
+
     const userRegistration = async () => {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/register", {
@@ -89,7 +91,7 @@ const GlobalContext = ({ children }) => {
 
     const addToCart = async (productId) => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/cart/addToCart`, { product: productId },{withCredentials:true})
+            const res = await axios.put(`http://localhost:5000/api/cart/addToCart`, { product: productId }, { withCredentials: true })
             const result = await res.data;
             console.log(result);
             return result
@@ -100,12 +102,15 @@ const GlobalContext = ({ children }) => {
 
     }
 
-    const removeFromCart = async (product) => {
+    const removeFromCart = async (cartItemId) => {
         try {
             const res = await axios.delete('http://localhost:5000/api/cart/removeFromCart', {
-                product
+                data: { cartItemId },
+                withCredentials: true,
             })
             const result = await res.data;
+            console.log(result);
+            fetchCartItems()
             return result
         } catch (error) {
             console.error("Error on removeToCart:", error.message);
@@ -113,10 +118,30 @@ const GlobalContext = ({ children }) => {
         }
     }
 
+    const updateCartItem = async (qty) => {
+        const res = await axios.patch(`http://localhost:5000/api/cart/removeFromCart`,{})
+    }
+    
+    const fetchCartItems = async () => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/cart/getAllCartItems`, { withCredentials: true })
+            const result = await res.data;
+            console.log(result);
+
+            if (result.success) {
+                setCartItems(result.items)
+            }
+
+        } catch (error) {
+            console.error("error on fetchCartItmes:", error.message);
+
+        }
+    }
 
 
     useEffect(() => {
         fetchProducts();
+
     }, []);
 
     const [product, setProduct] = useState({
@@ -198,7 +223,6 @@ const GlobalContext = ({ children }) => {
                 isUserLoggedIn,
                 setIsUserLoggedIn,
 
-                removeFromCart,
             }}>
                 <productContext.Provider value={{
                     product,
@@ -211,6 +235,10 @@ const GlobalContext = ({ children }) => {
                     featuredProducts,
                     setFeaturedProducts,
                     addToCart,
+                    fetchCartItems,
+                    cartItems,
+                    setCartItems,
+                    removeFromCart
                     // updateProduct,
                     // deleteProduct
                 }}>

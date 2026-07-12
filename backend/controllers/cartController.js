@@ -4,13 +4,13 @@ const addToCart = async (req, res) => {
     try {
         let { product } = req.body
         let user = await userModel.findById(req.user._id)
-        let idx = user.cartsItem.findIndex(item => item.productId == product)
-        if (idx) {
-            user.cartsItem.splice(idx, 1)
+        let idx = user.cartItems.findIndex(item => item.productId.toString() === product)
+        if (idx !== -1) {
+            user.cartItems.splice(idx, 1)
             await user.save();
             return res.status(200).json({ success: true, message: "product removed from cart" })
         } else {
-            user.cartsItem.push({
+            user.cartItems.push({
                 productId: product,
                 productQty: 1
             })
@@ -27,16 +27,18 @@ const addToCart = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
     try {
-        let { product } = req.body;
-        let user = await userModel.findById(req.user._id)
+        const { cartItemId } = req.body;
+        const user = await userModel.findById(req.user._id)
         if (!user) {
             return res.status(400).json({ success: false, message: "Invalid Request" })
         }
-        if (user.cartsItems.indexOf(product) === -1) {
+        const item = await user.cartItems.findIndex(item => item._id.toString() === cartItemId)
+        if (item === -1) {
             return res.status(400).json({ success: false, message: 'Product not found' })
         } else {
-            user.cartsItems.splice(user.cartsItems.indexOf(product), 1)
-            return res.status(203).json({ success: true, message: "Product remove successfully" })
+            user.cartItems.splice(item, 1);
+            await user.save()
+            res.status(200).json({ success: true, message: 'Product remove from cart successfully' })
         }
     } catch (error) {
         console.log("Error on removeFromCart:", error.message)
@@ -44,4 +46,35 @@ const removeFromCart = async (req, res) => {
     }
 }
 
-module.exports = { addToCart, removeFromCart }
+const getAllCartItems = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user._id).populate("cartItems.productId")
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'User Not Found' })
+        }
+        let items = user.cartItems
+        res.status(200).json({ success: true, message: 'Successful to get cart item', items })
+    } catch (error) {
+        console.log("Error on getAllCartsItems:", error.message);
+        return res.status(500).json({ success: false, message: 'Internal server error' })
+    }
+}
+
+const updateCartQty = async (req, res) => {
+   try {
+     const { cartId, qty } = req.body;
+    const user = await userModel.findById(req.user._id)
+    let idx = user.cartItems.findIndex(item => item._id.toString() === cartId)
+    if (idx === -1) {
+        return res.status(400).json({ success: false, message: 'Product not found' })
+    }else{
+        user.cartItems[idx].productQty = qty;
+        await user.save()
+        res.status(200).json({success:true,message:'Successfully to update'})}
+   } catch (error) {
+    console.log("Error on updateCartQty:",error.message);
+    
+   }
+
+}
+module.exports = { addToCart, removeFromCart, getAllCartItems, updateCartQty }
