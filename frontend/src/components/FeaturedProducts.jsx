@@ -4,7 +4,8 @@ import { productContext } from "../context/GlobalContext";
 
 
 const FeaturedProducts = () => {
-  const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart } = useContext(productContext)
+  const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart, cartItems } = useContext(productContext)
+  
   const handleAddToCart = async (productId) => {
     await addToCart(productId)
   }

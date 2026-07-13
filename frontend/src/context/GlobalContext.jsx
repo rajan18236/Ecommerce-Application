@@ -1,8 +1,13 @@
 import { useState, createContext, useEffect } from 'react';
 import axios from 'axios';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = await loadStripe('pk_test_51TsfI742willoDNog4TVCUdNfqTXXT64jxRJkMJY7uXsPZuO3RrOPnLBkNeJFt8IeY1TVGE71dp7ID11Z0jve9vd00IPbgOch7');
+
 
 export const authContext = createContext();
 export const productContext = createContext();
+export const orderContext = createContext();
 
 
 const GlobalContext = ({ children }) => {
@@ -119,9 +124,9 @@ const GlobalContext = ({ children }) => {
     }
 
     const updateCartItem = async (qty) => {
-        const res = await axios.patch(`http://localhost:5000/api/cart/removeFromCart`,{})
+        const res = await axios.patch(`http://localhost:5000/api/cart/removeFromCart`, {})
     }
-    
+
     const fetchCartItems = async () => {
         try {
             const res = await axios.get(`http://localhost:5000/api/cart/getAllCartItems`, { withCredentials: true })
@@ -141,7 +146,6 @@ const GlobalContext = ({ children }) => {
 
     useEffect(() => {
         fetchProducts();
-
     }, []);
 
     const [product, setProduct] = useState({
@@ -208,6 +212,15 @@ const GlobalContext = ({ children }) => {
         }
 
     }
+
+    const stripePayment = async () => {
+        const stripe = await stripePromise;
+        const res = await axios.post(`http://localhost:5000/api/payments/create-checkout-session`, {
+            products: cartItems
+        }, { withCredentials: true })
+        const session = await res.data;
+        window.location.assign(res.data.url);
+    }
     return (
         <div>
             <authContext.Provider value={{
@@ -238,11 +251,15 @@ const GlobalContext = ({ children }) => {
                     fetchCartItems,
                     cartItems,
                     setCartItems,
-                    removeFromCart
+                    removeFromCart,
+                    stripePayment
                     // updateProduct,
                     // deleteProduct
                 }}>
+
+
                     {children}
+
                 </productContext.Provider>
             </authContext.Provider>
 

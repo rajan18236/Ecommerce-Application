@@ -19,7 +19,7 @@ const App = () => {
         <Route path='/cartItem' element={isUserLoggedIn ? <Cart /> : <Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/category' element={<Category />} />
+        <Route path='/category' element={isUserLoggedIn?<Category />:<Login/>} />
         <Route path='/addproduct' element={isUserLoggedIn ? <AddProduct /> : <Login />} />
       </Routes>
     </div>

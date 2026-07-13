@@ -2,6 +2,7 @@ const express = require('express');
 const authRouter = require("./routes/authRouter");
 const productRouter = require("./routes/productRouter");
 const cartRouter = require("./routes/cartRouter")
+const paymentRouter = require("./routes/paymentRouter")
 const dbConnection = require('./config/dbConnection'); 
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api/auth', authRouter);
 // app.use('/api/admin', adminRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
+app.use('/api/payments',paymentRouter);
 
 // Connect to database first
 dbConnection();

@@ -4,14 +4,14 @@ const addToCart = async (req, res) => {
     try {
         let { product } = req.body
         let user = await userModel.findById(req.user._id)
-        let idx = user.cartItems.findIndex(item => item.productId.toString() === product)
+        let idx = user.cartItems.findIndex(item => item.product.toString() === product)
         if (idx !== -1) {
             user.cartItems.splice(idx, 1)
             await user.save();
             return res.status(200).json({ success: true, message: "product removed from cart" })
         } else {
             user.cartItems.push({
-                productId: product,
+                product,
                 productQty: 1
             })
             await user.save();
@@ -48,7 +48,7 @@ const removeFromCart = async (req, res) => {
 
 const getAllCartItems = async (req, res) => {
     try {
-        const user = await userModel.findById(req.user._id).populate("cartItems.productId")
+        const user = await userModel.findById(req.user._id).populate("cartItems.product")
         if (!user) {
             return res.status(400).json({ success: false, message: 'User Not Found' })
         }
@@ -61,20 +61,21 @@ const getAllCartItems = async (req, res) => {
 }
 
 const updateCartQty = async (req, res) => {
-   try {
-     const { cartId, qty } = req.body;
-    const user = await userModel.findById(req.user._id)
-    let idx = user.cartItems.findIndex(item => item._id.toString() === cartId)
-    if (idx === -1) {
-        return res.status(400).json({ success: false, message: 'Product not found' })
-    }else{
-        user.cartItems[idx].productQty = qty;
-        await user.save()
-        res.status(200).json({success:true,message:'Successfully to update'})}
-   } catch (error) {
-    console.log("Error on updateCartQty:",error.message);
-    
-   }
+    try {
+        const { cartId, qty } = req.body;
+        const user = await userModel.findById(req.user._id)
+        let idx = user.cartItems.findIndex(item => item._id.toString() === cartId)
+        if (idx === -1) {
+            return res.status(400).json({ success: false, message: 'Product not found' })
+        } else {
+            user.cartItems[idx].productQty = qty;
+            await user.save()
+            res.status(200).json({ success: true, message: 'Successfully to update' })
+        }
+    } catch (error) {
+        console.log("Error on updateCartQty:", error.message);
+
+    }
 
 }
 module.exports = { addToCart, removeFromCart, getAllCartItems, updateCartQty }

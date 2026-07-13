@@ -6,15 +6,19 @@ import { productContext } from "../context/GlobalContext";
 
 const Cart = () => {
 
-  const { fetchCartItems, cartItems, setCartItems, removeFromCart } = useContext(productContext)
+  const { fetchCartItems, cartItems, setCartItems, removeFromCart, stripePayment } = useContext(productContext)
+ 
   const [result, setResult] = useState(null)
+  console.log(cartItems);
 
-
+  const handlePayment = async () => {
+    await stripePayment()
+  }
   const increaseQty = (id) => {
     setCartItems((items) =>
       items.map((item) =>
         item._id === id
-          ? { ...item, quantity: item.productQty + 1 }
+          ? { ...item, productQty: item.productQty + 1 }
           : item
       )
     );
@@ -36,7 +40,7 @@ const Cart = () => {
   };
 
   const subtotal = cartItems.reduce(
-    (total, item) => total + item.productId.price * item.productQty,
+    (total, item) => total + item.product.price * item.productQty,
     0
   );
 
@@ -79,19 +83,19 @@ const Cart = () => {
               >
 
                 <img
-                  src={item.productId.image}
-                  alt={item.productId.productName}
+                  src={item.product.image}
+                  alt={item.product.productName}
                   className="w-32 h-32 rounded-xl object-cover"
                 />
 
                 <div className="flex-1">
 
                   <h2 className="text-xl font-semibold">
-                    {item.productId.productName}
+                    {item.product.productName}
                   </h2>
 
                   <p className="text-gray-500 mt-2">
-                    ${item.productId.price}
+                    ${item.product.price}
                   </p>
 
                   {/* Quantity */}
@@ -123,7 +127,7 @@ const Cart = () => {
                 <div className="text-right">
 
                   <p className="text-xl font-bold">
-                    ${(item.productId.price * item.productQty).toFixed(2)}
+                    ${(item.product.price * item.productQty).toFixed(2)}
                   </p>
 
                   <button
@@ -170,7 +174,7 @@ const Cart = () => {
 
           </div>
 
-          <button className="w-full mt-8 bg-black text-white py-4 rounded-xl hover:bg-gray-800 transition">
+          <button className="w-full mt-8 bg-black text-white py-4 rounded-xl hover:bg-gray-800 transition" onClick={handlePayment}>
             Proceed to Checkout
           </button>
 
