@@ -226,23 +226,28 @@ const GlobalContext = ({ children }) => {
         }
     };
 
-    const stripePayment = async() => {
-    try {
-        const res = await axios.post(
-            "http://localhost:5000/api/payments/create-checkout-session",
-            {
-                products: cartItems,
-            },
-            {
-                withCredentials: true,
-            }
-        );
-        window.location.href = res.data.url;
-    } catch (error) {
-        console.error(error);
+    const stripePayment = async () => {
+        try {
+            const res = await axios.post(
+                "http://localhost:5000/api/payments/create-checkout-session",
+                {
+                    products: cartItems,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+            window.location.href = res.data.url;
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const clearCart = async () => {
+        setCartItems([])
     }
-};
-    
+
     return (
         <div>
             <authContext.Provider value={{
@@ -274,7 +279,7 @@ const GlobalContext = ({ children }) => {
                     cartItems,
                     setCartItems,
                     removeFromCart,
-                    stripePayment
+                    stripePayment,clearCart
                     // updateProduct,
                     // deleteProduct
                 }}>

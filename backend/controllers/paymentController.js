@@ -22,7 +22,7 @@ const createCheckoutSession = async (req, res) => {
                     },
                     unit_amount: amount
                 },
-                quantity:product.productQty
+                quantity: product.productQty
             }
         })
 
@@ -43,7 +43,12 @@ const createCheckoutSession = async (req, res) => {
                 )
             }
         })
-        res.status(200).json({ success: true, message: "checkout sessions create successfully ", id: session.id, totalAmount: totalAmount / 100 })
+        res.status(200).json({
+            success: true,
+            message: "checkout sessions create successfully ",
+            url: session.url,
+            totalAmount: totalAmount / 100
+        })
     } catch (error) {
         console.log("Error on CheckoutSession:", error.message);
         return res.status(500).json({ success: false, message: 'Internal server error' });

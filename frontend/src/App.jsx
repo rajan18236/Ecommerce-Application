@@ -10,6 +10,10 @@ import PageNotFound from './pages/PageNotFound'
 import { useContext } from 'react'
 import { authContext } from './context/GlobalContext'
 import Category from './pages/Category'
+import Hello from './pages/Hello'
+import PurchaseSuccessPage from './pages/PurchaseSuccess'
+import PurchaseCancelPage from './pages/PurchaseCancel'
+
 const App = () => {
   const { isUserLoggedIn } = useContext(authContext)
   return (
@@ -23,6 +27,8 @@ const App = () => {
         <Route path='/category' element={isUserLoggedIn?<Category />:<Login/>} />
         <Route path='/addproduct' element={isUserLoggedIn ? <AddProduct /> : <Login />} />
         <Route path='/*' element={<PageNotFound/>} />
+        <Route path='/purchase-success' element={isUserLoggedIn ? <PurchaseSuccessPage /> : <Login />} />
+        <Route path='/purchase-cancel' element={isUserLoggedIn ? <PurchaseCancelPage /> : <Login />} />
       </Routes>
     </div>
   )
