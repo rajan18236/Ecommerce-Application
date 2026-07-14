@@ -5,7 +5,9 @@ import { productContext } from "../context/GlobalContext";
 
 const FeaturedProducts = () => {
   const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart, cartItems } = useContext(productContext)
-  
+  console.log(featuredProducts);
+
+
   const handleAddToCart = async (productId) => {
     await addToCart(productId)
   }
@@ -15,7 +17,7 @@ const FeaturedProducts = () => {
       <h1 className="text-gray-800 text-2xl font-semibold uppercase tracking-widest text-center mb-12">Featured Products</h1>
       {/* Product Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {featuredProducts.map((product, idx) => (
+        {featuredProducts && featuredProducts.length > 0 ? featuredProducts.map((product, idx) => (
           <div
             key={idx}
             className="bg-white rounded-3xl overflow-hidden shadow hover:shadow-xl duration-300 group"
@@ -34,7 +36,7 @@ const FeaturedProducts = () => {
               <div className="flex justify-between">
 
                 <p className="text-sm text-orange-500">
-                  @{product.seller?.product.seller.fullName}
+                  @{product.seller.fullName}
                 </p>
                 <p className="text-sm text-orange-500">
                   #{product.category}
@@ -61,7 +63,7 @@ const FeaturedProducts = () => {
               </button>
             </div>
           </div>
-        ))}
+        )) : <h1 className=" w-full text-2xl font-bold mt-2">No Products</h1>}
       </div>
     </section>
   );

@@ -4,6 +4,27 @@ const bcrypt = require('bcrypt');
 const getToken = require("../ulits/getToken")
 const { setTokenOnRedis, removeTokenFromRedis } = require("../ulits/setTokenOnRedis")
 
+const checkAuth = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user._id);
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'user not found' })
+        }
+        res.status(200).json({
+            success: true,
+            user: {
+                id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role,
+            },
+        })
+    } catch (error) {
+        console.log("Error on check auth:", error.message);
+        return res.status(500).json({ success: false, message: 'Internal server error' })
+    }
+}
+
 const registerUser = async (req, res) => {
     try {
         const { email, fullName, password, role } = req.body;
@@ -56,16 +77,16 @@ const registerUser = async (req, res) => {
         return res.status(201).json({
             success: true,
             message: "User registered successfully.",
-            user: {
-                id: newUser._id,
-                fullName: newUser.fullName,
-                email: newUser.email,
-                role: newUser.role
-            },
-            tokens: {
-                accessToken,
-                refreshToken,
-            },
+            // user: {
+            //     id: newUser._id,
+            //     fullName: newUser.fullName,
+            //     email: newUser.email,
+            //     role: newUser.role
+            // },
+            // tokens: {
+            //     accessToken,
+            //     refreshToken,
+            // },
         });
 
     } catch (error) {
@@ -112,16 +133,16 @@ const loginUser = async (req, res) => {
                 return res.status(201).json({
                     success: true,
                     message: "User login successfully.",
-                    user: {
-                        id: user._id,
-                        fullName: user.fullName,
-                        email: user.email,
-                        role: user.role
-                    },
-                    tokens: {
-                        accessToken,
-                        refreshToken,
-                    },
+                    // user: {
+                    //     id: user._id,
+                    //     fullName: user.fullName,
+                    //     email: user.email,
+                    //     role: user.role
+                    // },
+                    // tokens: {
+                    //     accessToken,
+                    //     refreshToken,
+                    // },
                 });
             }
             else {
@@ -142,11 +163,11 @@ const logoutUser = async (req, res) => {
         res.clearCookie('accessToken')
         res.clearCookie('refreshToken')
         console.log("logout");
-        
+
         res.json({ message: "Logout successfully" })
     } catch (error) {
         res.status(500).json({ message: "Server error" })
     }
 };
 
-module.exports = { registerUser, loginUser, logoutUser }
+module.exports = { checkAuth, registerUser, loginUser, logoutUser }

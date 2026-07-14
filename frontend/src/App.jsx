@@ -6,6 +6,7 @@ import Signup from './pages/Signup'
 import Login from './pages/LoginPage'
 import Cart from './pages/Cart'
 import AddProduct from './pages/AddProduct'
+import PageNotFound from './pages/PageNotFound'
 import { useContext } from 'react'
 import { authContext } from './context/GlobalContext'
 import Category from './pages/Category'
@@ -21,6 +22,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/category' element={isUserLoggedIn?<Category />:<Login/>} />
         <Route path='/addproduct' element={isUserLoggedIn ? <AddProduct /> : <Login />} />
+        <Route path='/*' element={<PageNotFound/>} />
       </Routes>
     </div>
   )

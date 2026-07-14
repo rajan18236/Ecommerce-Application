@@ -28,7 +28,7 @@ const Category = () => {
             {/* Details */}
             <div className="p-5">
               <p className="text-sm text-orange-500">
-                @{item.seller?.item.seller.fullName}
+                @{item.seller.fullName}
               </p>
 
               <div className="flex justify-between items-center gap-3">

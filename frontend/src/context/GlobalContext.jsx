@@ -2,7 +2,7 @@ import { useState, createContext, useEffect } from 'react';
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = await loadStripe('pk_test_51TsfI742willoDNog4TVCUdNfqTXXT64jxRJkMJY7uXsPZuO3RrOPnLBkNeJFt8IeY1TVGE71dp7ID11Z0jve9vd00IPbgOch7');
+const stripePromise = loadStripe('pk_test_51TsfI742willoDNog4TVCUdNfqTXXT64jxRJkMJY7uXsPZuO3RrOPnLBkNeJFt8IeY1TVGE71dp7ID11Z0jve9vd00IPbgOch7');
 
 
 export const authContext = createContext();
@@ -43,9 +43,9 @@ const GlobalContext = ({ children }) => {
                     email: "",
                     password: "",
                     role: "customer",
-                })
-                setUserInfo(result.user)
-                setIsUserLoggedIn(true)
+                }
+                )
+                authCheck()
                 return result;
             } else {
                 throw new Error("Registration failed");
@@ -67,8 +67,7 @@ const GlobalContext = ({ children }) => {
             const result = await res.data;
             if (result.success) {
                 setLoginUserData({ email: "", password: "" })
-                setUserInfo(result.user)
-                setIsUserLoggedIn(true)
+                authCheck()
                 return result;
             }
         } catch (error) {
@@ -143,9 +142,22 @@ const GlobalContext = ({ children }) => {
         }
     }
 
+    const authCheck = async () => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/auth/me`, { withCredentials: true })
+            const result = res.data
+            if (result.success) {
+                setIsUserLoggedIn(true);
+                setUserInfo(result.user);
+            }
+        } catch (error) {
+            console.error("Error on auth check:", error.message);
+        }
+    }
 
     useEffect(() => {
         fetchProducts();
+        authCheck();
     }, []);
 
     const [product, setProduct] = useState({
@@ -177,11 +189,11 @@ const GlobalContext = ({ children }) => {
                     category: "",
                 })
                 console.log(result);
-
+                fetchProducts()
                 return result
             }
             else {
-                throw error
+                throw new Error("Add product failed")
             }
         } catch (error) {
             console.error("Error on add product:", error.message)
@@ -194,6 +206,8 @@ const GlobalContext = ({ children }) => {
             const res = await axios.get(`http://localhost:5000/api/product/getAll`)
             const result = await res.data;
             setFeaturedProducts(result.products)
+            console.log(result);
+
             return result
         } catch (error) {
             console.error('error on fetchProduct:', error.message)
@@ -210,17 +224,25 @@ const GlobalContext = ({ children }) => {
         } catch (error) {
             console.error('Error on getProductByCategory:', error.message);
         }
+    };
 
+    const stripePayment = async() => {
+    try {
+        const res = await axios.post(
+            "http://localhost:5000/api/payments/create-checkout-session",
+            {
+                products: cartItems,
+            },
+            {
+                withCredentials: true,
+            }
+        );
+        window.location.href = res.data.url;
+    } catch (error) {
+        console.error(error);
     }
-
-    const stripePayment = async () => {
-        const stripe = await stripePromise;
-        const res = await axios.post(`http://localhost:5000/api/payments/create-checkout-session`, {
-            products: cartItems
-        }, { withCredentials: true })
-        const session = await res.data;
-        window.location.assign(res.data.url);
-    }
+};
+    
     return (
         <div>
             <authContext.Provider value={{
@@ -265,6 +287,8 @@ const GlobalContext = ({ children }) => {
 
         </div>
     )
+
+
 }
 
 export default GlobalContext
