@@ -3,7 +3,7 @@ const orderModel = require("../models/orderModel");
 
 module.exports.getOrders = async (req, res) => {
     try {
-    const orderItems = await orderModel.find({ userId: req.user._id });
+    const orderItems = await orderModel.find({ userId: req.user._id }).populate("products.product");
         if (!orderItems) {
             return res.status(400).json({ message: 'Invalid Request: Order Not found' })
         }

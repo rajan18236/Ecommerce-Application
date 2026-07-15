@@ -57,9 +57,8 @@ const createCheckoutSession = async (req, res) => {
 
 const checkoutSuccess = async (req, res) => {
     try {
-        const { sessionId } = req.body;
-        const session = await stripe.checkout.sessions.retrieve(sessionId);
-        console.log(session);       
+        const { sessionId,orderNo } = req.body;
+        const session = await stripe.checkout.sessions.retrieve(sessionId);      
         const existingOrder = await orderModel.findOne({
             stripeSessionId: session.id,
         });
@@ -74,6 +73,7 @@ const checkoutSuccess = async (req, res) => {
         if (session.payment_status === "paid") {
             const products = JSON.parse(session.metadata.products);
             const newOrder = await orderModel.create({
+
                 userId: session.metadata.userId,
                 products: products.map(product => ({
                     product: product.id,

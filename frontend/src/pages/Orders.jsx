@@ -4,14 +4,13 @@ import { productContext } from '../context/GlobalContext';
 
 
 const Orders = () => {
-const {orders, setOrders,fetchOrders} = useContext(productContext)
+    const { orders, setOrders, fetchOrders, orderNo } = useContext(productContext);
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
-
+        fetchOrders()
+    })
     return (
-        <div className="max-w-6xl mx-auto py-10">
+        <div className="max-w-6xl mx-auto py-10 mt-10">
 
             <h1 className="text-3xl font-bold mb-8">
                 My Orders
@@ -42,7 +41,7 @@ const {orders, setOrders,fetchOrders} = useContext(productContext)
 
                         <div>
                             <h2 className="font-semibold">
-                                Order #{order._id.slice(-6)}
+                                Order #{order._id}
                             </h2>
 
                             <p className="text-gray-500">

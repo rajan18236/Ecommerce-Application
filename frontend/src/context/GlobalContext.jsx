@@ -29,6 +29,7 @@ const GlobalContext = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const [orders, setOrders] = useState([]);
 
+
     const userRegistration = async () => {
         try {
             const res = await axios.post("http://localhost:5000/api/auth/register", {
@@ -89,6 +90,7 @@ const GlobalContext = ({ children }) => {
 
             setUserInfo({})
             setIsUserLoggedIn(false)
+            setOrders([])
         } catch (error) {
             console.error("Error logging out user:", error.message);
         }
@@ -156,11 +158,7 @@ const GlobalContext = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        fetchProducts();
-        authCheck();
-    }, []);
-
+   
     const [product, setProduct] = useState({
         productName: "",
         price: "",
@@ -215,21 +213,21 @@ const GlobalContext = ({ children }) => {
         }
 
     }
-const fetchOrders = async () => {
-    try {
-        const res = await axios.get(
-            "http://localhost:5000/api/order/my-orders",
-            {
-                withCredentials: true,
-            }
-        );
+    const fetchOrders = async () => {
+        try {
+            const res = await axios.get(
+                "http://localhost:5000/api/orders/my-orders",
+                {
+                    withCredentials: true,
+                }
+            );
 
-        setOrders(res.data.orderItems);
+            setOrders(res.data.orderItems);
 
-    } catch (error) {
-        console.log(error);
-    }
-};
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const getProductsByCategory = async (category) => {
         try {
             const res = await axios.get(`http://localhost:5000/api/product/category/${category}`)
@@ -253,7 +251,6 @@ const fetchOrders = async () => {
                 }
             );
             window.location.href = res.data.url;
-
         } catch (error) {
             console.error(error);
         }
@@ -280,6 +277,7 @@ const fetchOrders = async () => {
                 setUserInfo,
                 isUserLoggedIn,
                 setIsUserLoggedIn,
+                authCheck,
 
             }}>
                 <productContext.Provider value={{
@@ -297,11 +295,11 @@ const fetchOrders = async () => {
                     cartItems,
                     setCartItems,
                     removeFromCart,
-                    stripePayment, 
+                    stripePayment,
                     clearCart,
-                    orders, 
+                    orders,
                     setOrders,
-                    fetchOrders,
+                   fetchOrders,
                     // updateProduct,
                     // deleteProduct
                 }}>

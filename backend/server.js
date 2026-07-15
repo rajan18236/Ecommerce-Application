@@ -8,6 +8,9 @@ const dbConnection = require('./config/dbConnection');
 const cookieParser = require("cookie-parser");
 const app = express();
 const cors = require("cors");
+const dns =  require("dns");
+
+dns.setServers(["1.1.1.1","8.8.8.8"])
 
 
 require('dotenv').config();

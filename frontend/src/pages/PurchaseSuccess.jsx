@@ -6,17 +6,24 @@ import { productContext } from "../context/GlobalContext";
 
 
 const PurchaseSuccessPage = () => {
-    const {clearCart} = useContext(productContext)
+	const { clearCart, fetchOrders, orders } = useContext(productContext)
 	const [isProcessing, setIsProcessing] = useState(true);
 	const [error, setError] = useState(null);
+	const [result,setResult] =useState(null)
 
 	useEffect(() => {
 		const handleCheckoutSuccess = async (sessionId) => {
 			try {
-				await axios.post("http://localhost:5000/api/payments/checkout-success", {
+				const res = await axios.post("http://localhost:5000/api/payments/checkout-success", {
 					sessionId,
-				},{withCredentials:true});
-				await clearCart();
+				}, { withCredentials: true });
+				const result = await res.data;
+				if (result.success) {
+					await clearCart();
+					await fetchOrders();
+					setResult(result.orderId)
+				}
+
 			} catch (error) {
 				console.log(error);
 			} finally {
@@ -25,7 +32,7 @@ const PurchaseSuccessPage = () => {
 		};
 
 		const sessionId = new URLSearchParams(window.location.search).get("session_id");
-		
+
 		if (sessionId) {
 			console.log(sessionId);
 			handleCheckoutSuccess(sessionId);
@@ -33,11 +40,11 @@ const PurchaseSuccessPage = () => {
 			setIsProcessing(false);
 			setError("No session ID found in the URL");
 		}
-		
+
 		// if (isProcessing) return "Processing...";
-		
+
 		// if (error) return `Error: ${error}`;
-	}, [clearCart]);
+	}, []);
 
 	return (
 		<div className='h-screen flex items-center justify-center px-4 mt-10'>
@@ -60,7 +67,7 @@ const PurchaseSuccessPage = () => {
 					<div className='bg-gray-700 rounded-lg p-4 mb-6'>
 						<div className='flex items-center justify-between mb-2'>
 							<span className='text-sm text-gray-400'>Order number</span>
-							<span className='text-sm font-semibold text-emerald-400'>#12345</span>
+							<span className='text-sm font-semibold text-emerald-400'>#{result}</span>
 						</div>
 						<div className='flex items-center justify-between'>
 							<span className='text-sm text-gray-400'>Estimated delivery</span>
