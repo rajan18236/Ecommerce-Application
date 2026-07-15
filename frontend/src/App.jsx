@@ -13,6 +13,7 @@ import Category from './pages/Category'
 import Hello from './pages/Hello'
 import PurchaseSuccessPage from './pages/PurchaseSuccess'
 import PurchaseCancelPage from './pages/PurchaseCancel'
+import Orders from './pages/Orders'
 
 const App = () => {
   const { isUserLoggedIn } = useContext(authContext)
@@ -25,6 +26,7 @@ const App = () => {
         <Route path='/signup' element={<Signup />} />
         <Route path='/login' element={<Login />} />
         <Route path='/category' element={isUserLoggedIn?<Category />:<Login/>} />
+        <Route path='/orders' element={isUserLoggedIn?<Orders/>:<Login/>} />
         <Route path='/addproduct' element={isUserLoggedIn ? <AddProduct /> : <Login />} />
         <Route path='/*' element={<PageNotFound/>} />
         <Route path='/purchase-success' element={isUserLoggedIn ? <PurchaseSuccessPage /> : <Login />} />

@@ -13,10 +13,10 @@ const PurchaseSuccessPage = () => {
 	useEffect(() => {
 		const handleCheckoutSuccess = async (sessionId) => {
 			try {
-				await axios.post("/payments/checkout-success", {
+				await axios.post("http://localhost:5000/api/payments/checkout-success", {
 					sessionId,
-				});
-				clearCart();
+				},{withCredentials:true});
+				await clearCart();
 			} catch (error) {
 				console.log(error);
 			} finally {
@@ -25,28 +25,22 @@ const PurchaseSuccessPage = () => {
 		};
 
 		const sessionId = new URLSearchParams(window.location.search).get("session_id");
+		
 		if (sessionId) {
+			console.log(sessionId);
 			handleCheckoutSuccess(sessionId);
 		} else {
 			setIsProcessing(false);
 			setError("No session ID found in the URL");
 		}
+		
+		// if (isProcessing) return "Processing...";
+		
+		// if (error) return `Error: ${error}`;
 	}, [clearCart]);
 
-	if (isProcessing) return "Processing...";
-
-	if (error) return `Error: ${error}`;
-
 	return (
-		<div className='h-screen flex items-center justify-center px-4'>
-			<Confetti
-				width={window.innerWidth}
-				height={window.innerHeight}
-				gravity={0.1}
-				style={{ zIndex: 99 }}
-				numberOfPieces={700}
-				recycle={false}
-			/>
+		<div className='h-screen flex items-center justify-center px-4 mt-10'>
 
 			<div className='max-w-md w-full bg-gray-800 rounded-lg shadow-xl overflow-hidden relative z-10'>
 				<div className='p-6 sm:p-8'>

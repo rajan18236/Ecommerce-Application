@@ -170,4 +170,18 @@ const logoutUser = async (req, res) => {
     }
 };
 
-module.exports = { checkAuth, registerUser, loginUser, logoutUser }
+const removeCartItems = async (req, res) => {
+    try {
+        let user = await userModel.findById(req.user._id);
+        if (!user) {
+            return res.status(400).json({ message: "Invaild Request:user not found" })
+        }
+        user.cartItems = [];
+        await user.save()
+        res.status(200).json({ message: "User cart is empty now" })
+    } catch (error) {
+        console.log("Erron on removeCartItems:", error.message);
+        return res.status(500).json({ err: error.message })
+    }
+}
+module.exports = { checkAuth, registerUser, loginUser, logoutUser, removeCartItems }

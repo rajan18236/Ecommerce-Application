@@ -27,6 +27,7 @@ const GlobalContext = ({ children }) => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [caterogyItems, setCaterogyItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [orders, setOrders] = useState([]);
 
     const userRegistration = async () => {
         try {
@@ -214,7 +215,21 @@ const GlobalContext = ({ children }) => {
         }
 
     }
+const fetchOrders = async () => {
+    try {
+        const res = await axios.get(
+            "http://localhost:5000/api/order/my-orders",
+            {
+                withCredentials: true,
+            }
+        );
 
+        setOrders(res.data.orderItems);
+
+    } catch (error) {
+        console.log(error);
+    }
+};
     const getProductsByCategory = async (category) => {
         try {
             const res = await axios.get(`http://localhost:5000/api/product/category/${category}`)
@@ -246,6 +261,9 @@ const GlobalContext = ({ children }) => {
 
     const clearCart = async () => {
         setCartItems([])
+        const res = await axios.get(`http://localhost:5000/api/auth/clearCartItems`, {
+            withCredentials: true,
+        })
     }
 
     return (
@@ -279,7 +297,11 @@ const GlobalContext = ({ children }) => {
                     cartItems,
                     setCartItems,
                     removeFromCart,
-                    stripePayment,clearCart
+                    stripePayment, 
+                    clearCart,
+                    orders, 
+                    setOrders,
+                    fetchOrders,
                     // updateProduct,
                     // deleteProduct
                 }}>

@@ -7,12 +7,15 @@ import { productContext } from "../context/GlobalContext";
 const Cart = () => {
 
   const { fetchCartItems, cartItems, setCartItems, removeFromCart, stripePayment } = useContext(productContext)
- 
+
   const [result, setResult] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   console.log(cartItems);
 
   const handlePayment = async () => {
+    setIsLoading(true)
     await stripePayment()
+    setIsLoading(false)
   }
   const increaseQty = (id) => {
     setCartItems((items) =>
@@ -44,7 +47,7 @@ const Cart = () => {
     0
   );
 
-  const shipping = subtotal > 0 ? 15 : 0;
+  const shipping = subtotal > 0 ? 0 : 0;
   const total = subtotal + shipping;
 
 
@@ -174,8 +177,9 @@ const Cart = () => {
 
           </div>
 
-          <button className="w-full mt-8 bg-black text-white py-4 rounded-xl hover:bg-gray-800 transition" onClick={handlePayment}>
-            Proceed to Checkout
+          <button className={`w-full mt-8 text-white py-4 rounded-xl transition ${isLoading ? "bg-gray-500 cursor-not-allowed" : "bg-black"}`} onClick={handlePayment}>
+            {isLoading ? "Processing..." : "Proceed to Checkout"}
+
           </button>
 
         </div>

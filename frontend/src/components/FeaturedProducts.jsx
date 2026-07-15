@@ -6,7 +6,7 @@ import { productContext } from "../context/GlobalContext";
 const FeaturedProducts = () => {
   const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart, cartItems } = useContext(productContext)
   console.log(featuredProducts);
-
+  
 
   const handleAddToCart = async (productId) => {
     await addToCart(productId)
@@ -36,7 +36,7 @@ const FeaturedProducts = () => {
               <div className="flex justify-between">
 
                 <p className="text-sm text-orange-500">
-                  {/* @{product.seller.fullName} */}
+                  @{product.seller.fullName}
                 </p>
                 <p className="text-sm text-orange-500">
                   #{product.category}

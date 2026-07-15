@@ -10,7 +10,7 @@ const PurchaseCancelPage = () => {
 						<XCircle className='text-red-500 w-16 h-16 mb-4' />
 					</div>
 					<h1 className='text-2xl sm:text-3xl font-bold text-center text-red-500 mb-2'>Purchase Cancelled</h1>
-					<p className='text-gray-300 text-center mb-6'>
+					<p className='text-black text-center mb-6'>
 						Your order has been cancelled. No charges have been made.
 					</p>
 					<div className='bg-gray-700 rounded-lg p-4 mb-6'>
