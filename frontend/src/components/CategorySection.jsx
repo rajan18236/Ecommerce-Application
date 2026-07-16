@@ -44,9 +44,9 @@ const categories = [
 
 const CategorySection = () => {
   const navigate = useNavigate()
-  const { getProductsByCategory } = useContext(productContext)
+  const { fetchProductsByCategory } = useContext(productContext)
   const handleCategory = async (category) => {
-    const result = await getProductsByCategory(category)
+    const result = await fetchProductsByCategory(category)
     if (result.success) {
       navigate('/category')
     }

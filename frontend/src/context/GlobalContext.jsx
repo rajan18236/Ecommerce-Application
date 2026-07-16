@@ -25,6 +25,7 @@ const GlobalContext = ({ children }) => {
     const [userInfo, setUserInfo] = useState({});
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [myProducts, setMyProducts] = useState([]);
     const [caterogyItems, setCaterogyItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [orders, setOrders] = useState([]);
@@ -158,7 +159,7 @@ const GlobalContext = ({ children }) => {
         }
     }
 
-   
+
     const [product, setProduct] = useState({
         productName: "",
         price: "",
@@ -187,8 +188,8 @@ const GlobalContext = ({ children }) => {
                     image: "",
                     category: "",
                 })
-                console.log(result);
                 fetchProducts()
+                fetchMyProducts()
                 return result
             }
             else {
@@ -198,21 +199,20 @@ const GlobalContext = ({ children }) => {
             console.error("Error on add product:", error.message)
             return { success: false, message: "Something went wrong" }
         }
-    }
+    };
 
     const fetchProducts = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/product/getAll`)
+            const res = await axios.get(`http://localhost:5000/api/product/getAll`, { withCredentials: true })
             const result = await res.data;
             setFeaturedProducts(result.products)
-            console.log(result);
-
             return result
         } catch (error) {
             console.error('error on fetchProduct:', error.message)
         }
 
-    }
+    };
+
     const fetchOrders = async () => {
         try {
             const res = await axios.get(
@@ -228,7 +228,8 @@ const GlobalContext = ({ children }) => {
             console.log(error);
         }
     };
-    const getProductsByCategory = async (category) => {
+
+    const fetchProductsByCategory = async (category) => {
         try {
             const res = await axios.get(`http://localhost:5000/api/product/category/${category}`)
             const result = await res.data;
@@ -261,8 +262,80 @@ const GlobalContext = ({ children }) => {
         const res = await axios.get(`http://localhost:5000/api/auth/clearCartItems`, {
             withCredentials: true,
         })
-    }
+    };
 
+    const fetchMyProducts = async () => {
+        try {
+            const res = await axios.get(
+                "http://localhost:5000/api/product/my-products",
+                {
+                    withCredentials: true,
+                }
+            );
+            setMyProducts(res.data.products);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const deleteProduct = async (id) => {
+        try {
+            await axios.delete(
+                `http://localhost:5000/api/product/delete/${id}`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            setMyProducts((pre) =>
+                pre.filter((product) => product._id !== id)
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const fetchProductById = async (id) => {
+        try {
+            const res = await axios.get(
+                `http://localhost:5000/api/product/${id}`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            setProduct(res.data.product);
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const editProduct = async (productId) => {
+        try {
+            const res = await axios.put(`http://localhost:5000/api/product/edit`, {
+                productData: product
+            }, { withCredentials: true })
+            setProduct({
+                productName: "",
+                price: "",
+                description: "",
+                image: "",
+                category: "",
+            })
+            fetchMyProducts()
+            return res.data
+        } catch (error) {
+            console.error(error.message);
+
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts()
+        authCheck();
+    }, [])
+    
     return (
         <div>
             <authContext.Provider value={{
@@ -284,7 +357,7 @@ const GlobalContext = ({ children }) => {
                     product,
                     setProduct,
                     addProduct,
-                    getProductsByCategory,
+                    fetchProductsByCategory,
                     caterogyItems,
                     setCaterogyItems,
                     fetchProducts,
@@ -299,7 +372,13 @@ const GlobalContext = ({ children }) => {
                     clearCart,
                     orders,
                     setOrders,
-                   fetchOrders,
+                    fetchOrders,
+                    fetchMyProducts,
+                    myProducts,
+                    setMyProducts,
+                    deleteProduct,
+                    fetchProductById,
+                    editProduct
                     // updateProduct,
                     // deleteProduct
                 }}>

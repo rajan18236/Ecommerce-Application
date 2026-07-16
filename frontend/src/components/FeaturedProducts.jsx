@@ -1,12 +1,15 @@
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useContext, useState } from "react";
-import { productContext } from "../context/GlobalContext";
+import { authContext, productContext } from "../context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 
 
 const FeaturedProducts = () => {
-  const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart, cartItems } = useContext(productContext)
+  const navigate = useNavigate();
+  const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart, cartItems } = useContext(productContext);
+  const { isUserLoggedIn } = useContext(authContext);
   console.log(featuredProducts);
-  
+
 
   const handleAddToCart = async (productId) => {
     await addToCart(productId)
@@ -55,10 +58,18 @@ const FeaturedProducts = () => {
               </div>
 
               {/* Button */}
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-xl hover:bg-orange-500 duration-300 flex items-center justify-center gap-2" onClick={() => {
-                handleAddToCart(product._id)
-              }}>
-                <ShoppingCart size={18} />
+              <button
+                className="mt-5 w-full bg-black text-white py-3 rounded-xl cursor-pointer duration-300 flex items-center justify-center gap-2 active:scale-90 "
+                onClick={() => {
+                  if (!isUserLoggedIn) {
+                    navigate("/login");
+                    return;
+                  }
+
+                  handleAddToCart(product._id);
+                }}
+              >
+                <ShoppingCart size={24} />
                 Add to Cart
               </button>
             </div>

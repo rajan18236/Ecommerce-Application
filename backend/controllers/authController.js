@@ -162,8 +162,6 @@ const logoutUser = async (req, res) => {
         removeTokenFromRedis(req.user._id)
         res.clearCookie('accessToken')
         res.clearCookie('refreshToken')
-        console.log("logout");
-
         res.json({ message: "Logout successfully" })
     } catch (error) {
         res.status(500).json({ message: "Server error" })

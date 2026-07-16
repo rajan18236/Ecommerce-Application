@@ -78,4 +78,66 @@ const getProductCategory = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Internal server error' })
     }
 };
-module.exports = { createProduct, getAllProducts, getProductCategory }
+
+const getProductsOfAdmin = async (req, res) => {
+    try {
+        const products = await productModel.find({ seller: req.user._id })
+        if (!products) {
+            return res.status(400).json({ message: 'Products not found' })
+        };
+        res.status(200).json({
+            success: true,
+            products,
+        })
+    } catch (error) {
+        console.log("Error on getProductOfAdmin:", error.message)
+        return res.status(500).json({ success: false, message: error.message })
+    }
+};
+
+const deleteProduct = async (req, res) => {
+    try {
+        let { productId } = req.params;
+        let product = await productModel.findByIdAndDelete(productId);
+        if (!product) {
+            return res.status(400).json({ success: false, message: "Invalid Request product not found" });
+        }
+        res.status(200).json({ success: true, message: "Product removed", product })
+    } catch (error) {
+        console.log("Error On deleteProduct:", error.message);
+        return res.status(500).json({ success: false, err: error.message })
+
+    }
+};
+
+const getProductById = async (req, res) => {
+    try {
+        let { productId } = req.params
+        let product = await productModel.findById(productId);
+        if (!product) {
+            return res.status(400).json({ success: false, message: 'Product not found' })
+        };
+        res.status(200).json({ success: true, product })
+    } catch (error) {
+        console.log("Error on get product by id:", error.message);
+        return res.status(500).json({ success: false, err: error.message })
+    }
+};
+
+const editProduct = async (req, res) => {
+    try {
+        let {productData } = req.body;
+        console.log( productData);
+
+        let product = await productModel.findByIdAndUpdate(productData._id  ,  productData );
+        if (!product) {
+            return res.status(400).json({ success: true, message: 'Invalid Request product not found' })
+        };
+        res.status(200).json({ success: true, message: 'Product edit successfully', product })
+    } catch (error) {
+        console.log("Error On EditProduct:", error.message);
+        return res.status(500).json({ success: false, err: error.message })
+
+    }
+}
+module.exports = { createProduct, getAllProducts, getProductCategory, getProductsOfAdmin, deleteProduct, editProduct, getProductById }

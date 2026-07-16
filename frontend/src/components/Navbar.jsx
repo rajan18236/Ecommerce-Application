@@ -9,6 +9,8 @@ import { authContext } from '../context/GlobalContext';
 import { MdAddBusiness } from "react-icons/md";
 import { useContext, useEffect } from 'react';
 import { RiTakeawayLine } from "react-icons/ri";
+import { TbReportAnalyticsFilled } from "react-icons/tb"
+
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -38,10 +40,16 @@ const Navbar = () => {
                                 <span className="text-sm">Home</span>
                             </Link>
                             {isSeller ? (
+                                <>
                                 <Link to="/addproduct" className="hover:text-gray-400 flex flex-col items-center">
                                     <MdAddBusiness size={24} />
                                     <span className="text-sm">Add Product</span>
                                 </Link>
+                                <Link to="/adminpanel" className="hover:text-gray-400 flex flex-col items-center">
+                                    <TbReportAnalyticsFilled size={24} />
+                                    <span className="text-sm">Admin Panel</span>
+                                </Link>
+                        </>
                             ) :
                             <>
                                 <Link to="/cartItem" className="hover:text-gray-400">
