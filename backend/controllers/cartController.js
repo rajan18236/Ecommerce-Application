@@ -8,7 +8,7 @@ const addToCart = async (req, res) => {
         if (idx !== -1) {
             user.cartItems.splice(idx, 1)
             await user.save();
-            return res.status(200).json({ success: true, message: "product removed from cart" })
+            return res.status(200).json({ success: false, message: "product removed from cart" })
         } else {
             user.cartItems.push({
                 product,

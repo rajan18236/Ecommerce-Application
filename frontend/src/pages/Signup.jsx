@@ -17,7 +17,6 @@ const Signup = () => {
     e.preventDefault();
     const result = await userRegistration();
     if (result) {
-      setResult(result);
       setIsLoading(false);
       if (result.success) {
         navigate("/");
@@ -169,16 +168,6 @@ const Signup = () => {
                 </select>
               </div>
             </div>
-            {result && (
-              <div
-                className={`mt-4 p-4 rounded-xl ${result.success
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-                  }`}
-              >
-                {result.message}
-              </div>
-            )}
 
             <button
               type="submit"

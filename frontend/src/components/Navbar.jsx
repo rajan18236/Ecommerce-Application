@@ -62,13 +62,9 @@ const Navbar = () => {
                                 </Link>
                                 </>
                             }
-                            <select name="profile" id="profile" className='text-white bg-gray-800 outline-none'>
-                                <option value="name">{userInfo?userInfo.fullName:"profile"}</option>
-                                <option value="">maharjan</option>
-                            </select>
                             <button
                                 onClick={handleLogout}
-                                className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition"
+                                className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 ml-8 transition"
                             >
                                 Logout
                             </button>

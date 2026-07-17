@@ -1,5 +1,5 @@
-import React, { useEffect,useContext } from 'react'
-import { Routes, Route,  Navigate } from 'react-router-dom'
+import React, { useEffect, useContext } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Signup from './pages/Signup'
@@ -9,63 +9,82 @@ import AddProduct from './pages/AddProduct'
 import AdminPanel from './pages/AdminPanel'
 import PageNotFound from './pages/PageNotFound'
 import Category from './pages/Category'
-import PurchaseSuccessPage from './pages/PurchaseSuccess'
-import PurchaseCancelPage from './pages/PurchaseCancel'
+import PurchaseSuccessPage from './pages/PurchaseSuccess.jsx'
+import PurchaseCancelPage from './pages/PurchaseCancel.jsx'
 import Orders from './pages/Orders'
 import { authContext, productContext } from './context/GlobalContext'
 import EditProduct from './pages/EditProduct'
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
-  const { isUserLoggedIn, authCheck } = useContext(authContext);
+  const { isUserLoggedIn, isAuthReady, authCheck } = useContext(authContext);
   const { fetchProducts } = useContext(productContext)
 
+  useEffect(() => {
+    authCheck()
+  }, [])
+
+  const ProtectedRoute = ({ children }) => {
+    if (!isAuthReady) {
+      return <div className="p-6 text-center text-gray-600">Checking session...</div>
+    }
+
+    return isUserLoggedIn ? children : <Navigate to="/login" replace />
+  }
+
   return (
-    <div className='mt-10'>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
+    <div className='min-h-screen relative overflow-hidden'>
+      <div >
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
 
-        <Route
-          path="/cartItem"
-          element={isUserLoggedIn ? <Cart /> : <Navigate to="/login" replace />}
-        />
+          <Route
+            path="/cartItem"
+            element={<ProtectedRoute><Cart /></ProtectedRoute>}
+          />
 
-        <Route
-          path="/category"
-          element={isUserLoggedIn ? <Category /> : <Navigate to="/login" replace />}
-        />
+          <Route
+            path="/category"
+            element={<ProtectedRoute><Category /></ProtectedRoute>}
+          />
 
-        <Route
-          path="/orders"
-          element={isUserLoggedIn ? <Orders /> : <Navigate to="/login" replace />}
-        />
+          <Route
+            path="/orders"
+            element={<ProtectedRoute><Orders /></ProtectedRoute>}
+          />
 
-        <Route
-          path="/addproduct"
-          element={isUserLoggedIn ? <AddProduct /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/adminpanel"
-          element={isUserLoggedIn ? <AdminPanel /> : <Navigate to="/login" replace />}
-        />
+          <Route
+            path="/addproduct"
+            element={<ProtectedRoute><AddProduct /></ProtectedRoute>}
+          />
+          <Route
+            path="/adminpanel"
+            element={<ProtectedRoute><AdminPanel /></ProtectedRoute>}
+          />
 
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/purchase-success"
-          element={isUserLoggedIn ? <PurchaseSuccessPage /> : <Navigate to="/login" replace />}
-        />
+          <Route
+            path="/purchase-success"
+            element={<ProtectedRoute><PurchaseSuccessPage /></ProtectedRoute>}
+          />
 
-        <Route
-          path="/purchase-cancel"
-          element={isUserLoggedIn ? <PurchaseCancelPage /> : <Navigate to="/login" replace />}
-        />
-        <Route path="/edit-product/:id" element={isUserLoggedIn ? <EditProduct /> : <Navigate to="/login" replace />} />
+          <Route
+            path="/purchase-cancel"
+            element={<ProtectedRoute><PurchaseCancelPage /></ProtectedRoute>}
+          />
+          <Route path="/edit-product/:id" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
 
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </div>
+      <div>
+        <Toaster />
+      </div>
     </div>
+
   )
 }
 

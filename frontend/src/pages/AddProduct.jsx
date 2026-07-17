@@ -8,41 +8,39 @@ const AdminAddProduct = () => {
   const { product, setProduct, addProduct, } = useContext(productContext)
   const [isLoading, setIsLoading] = useState(false)
   const ref = useRef(null)
-  const [result, setResult] = useState(null)
+  const [imagePreview, setImagePreview] = useState("")
   const handleChange = (e) => {
-    setProduct({
-      ...product,
+    setProduct((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     setIsLoading(true)
     e.preventDefault();
-    let result = await addProduct()
-    setResult(result)
+    let result = await addProduct(imagePreview)
     setIsLoading(false)
     if (result.success) {
       ref.current.value = ""
+      setImagePreview("")
     }
   };
 
 
   const handleImage = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+
+    if (!file) return;
 
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      setProduct({
-        ...product,
-        image: reader.result, // Base64 string
-      });
+      setImagePreview(reader.result);
     };
 
     reader.readAsDataURL(file);
   };
-
   return (
     <div className="min-h-screen bg-gray-100 py-10 mt-10 px-5">
 
@@ -187,16 +185,6 @@ const AdminAddProduct = () => {
 
             </div>
           </div>
-          {result && (
-            <div
-              className={`mt-4 p-4 rounded-xl ${result.success
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-                }`}
-            >
-              {result.message}
-            </div>
-          )}
 
           {/* Button */}
           <button

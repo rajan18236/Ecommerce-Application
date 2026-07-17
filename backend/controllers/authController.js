@@ -76,7 +76,7 @@ const registerUser = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "User registered successfully.",
+            message: "Successfully Registered",
             // user: {
             //     id: newUser._id,
             //     fullName: newUser.fullName,
@@ -132,7 +132,7 @@ const loginUser = async (req, res) => {
                 });
                 return res.status(201).json({
                     success: true,
-                    message: "User login successfully.",
+                    message: "Successfully Login",
                     // user: {
                     //     id: user._id,
                     //     fullName: user.fullName,
@@ -162,7 +162,7 @@ const logoutUser = async (req, res) => {
         removeTokenFromRedis(req.user._id)
         res.clearCookie('accessToken')
         res.clearCookie('refreshToken')
-        res.json({ message: "Logout successfully" })
+        res.json({ message: "Successfully Logout " })
     } catch (error) {
         res.status(500).json({ message: "Server error" })
     }

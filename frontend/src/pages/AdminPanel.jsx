@@ -60,7 +60,7 @@ const SellerProducts = () => {
           </thead>
 
           <tbody className="text-center">
-            {myProducts.map((product) => (
+            {myProducts && myProducts.length !== 0 ? myProducts.map((product) => (
 
               <tr
                 key={product._id}
@@ -110,7 +110,8 @@ const SellerProducts = () => {
 
               </tr>
 
-            ))}
+            )
+            ) : <h1 className="text-xl text-gray-500 text-center">You don't have any Product </h1>}
 
           </tbody>
 

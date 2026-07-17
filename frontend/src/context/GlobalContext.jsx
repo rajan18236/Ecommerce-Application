@@ -1,6 +1,7 @@
 import { useState, createContext, useEffect } from 'react';
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
+import { toast } from 'react-hot-toast';
 
 const stripePromise = loadStripe('pk_test_51TsfI742willoDNog4TVCUdNfqTXXT64jxRJkMJY7uXsPZuO3RrOPnLBkNeJFt8IeY1TVGE71dp7ID11Z0jve9vd00IPbgOch7');
 
@@ -24,6 +25,7 @@ const GlobalContext = ({ children }) => {
     });
     const [userInfo, setUserInfo] = useState({});
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [isAuthReady, setIsAuthReady] = useState(false);
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [myProducts, setMyProducts] = useState([]);
     const [caterogyItems, setCaterogyItems] = useState([]);
@@ -49,6 +51,7 @@ const GlobalContext = ({ children }) => {
                 }
                 )
                 authCheck()
+                toast.success(result.message)
                 return result;
             } else {
                 throw new Error("Registration failed");
@@ -57,9 +60,10 @@ const GlobalContext = ({ children }) => {
         } catch (error) {
             console.error("Error registering user:", error.message);
             if (error.status === 409) {
-                return { success: false, message: "User already exists" };
+                return (toast.error("User already exists"));
             }
-            return { success: false, message: "Registration failed" };
+            toast.error("Registration failed")
+            return { success: false };
         }
 
     };
@@ -71,11 +75,13 @@ const GlobalContext = ({ children }) => {
             if (result.success) {
                 setLoginUserData({ email: "", password: "" })
                 authCheck()
+                toast.success(result.message)
                 return result;
             }
         } catch (error) {
             console.error("Error logging in user:", error.message);
-            return { success: false, message: "Login failed" };
+            toast.error("Login failed")
+            return { success: false };
         }
     };
 
@@ -91,9 +97,12 @@ const GlobalContext = ({ children }) => {
 
             setUserInfo({})
             setIsUserLoggedIn(false)
+            setIsAuthReady(true)
             setOrders([])
+            toast.success("Successfully Logout")
         } catch (error) {
             console.error("Error logging out user:", error.message);
+            toast.error("Logout failed")
         }
     };
 
@@ -101,10 +110,16 @@ const GlobalContext = ({ children }) => {
         try {
             const res = await axios.put(`http://localhost:5000/api/cart/addToCart`, { product: productId }, { withCredentials: true })
             const result = await res.data;
-            console.log(result);
+            if (!result.success) {
+                return toast('Removed from Cart', {
+                    icon: '🔴',
+                });
+            }
+            toast.success("Successfully added")
             return result
         } catch (error) {
             console.error("Error on addToCart:", error.message);
+            toast.error("Something went wrong")
             return ({ success: false, message: 'Fail to add' })
         }
 
@@ -117,11 +132,12 @@ const GlobalContext = ({ children }) => {
                 withCredentials: true,
             })
             const result = await res.data;
-            console.log(result);
+            toast.success("Successfully removed")
             fetchCartItems()
             return result
         } catch (error) {
             console.error("Error on removeToCart:", error.message);
+            toast.error("Something went wrong")
             return ({ success: false, message: 'Fail to remove' })
         }
     }
@@ -153,11 +169,18 @@ const GlobalContext = ({ children }) => {
             if (result.success) {
                 setIsUserLoggedIn(true);
                 setUserInfo(result.user);
+            } else {
+                setIsUserLoggedIn(false);
+                setUserInfo({});
             }
         } catch (error) {
             console.error("Error on auth check:", error.message);
+            setIsUserLoggedIn(false);
+            setUserInfo({});
+        } finally {
+            setIsAuthReady(true);
         }
-    }
+    };
 
 
     const [product, setProduct] = useState({
@@ -168,13 +191,13 @@ const GlobalContext = ({ children }) => {
         category: "",
     });
 
-    const addProduct = async () => {
+    const addProduct = async (imageOverride) => {
         try {
             const res = await axios.post(`http://localhost:5000/api/product/create`, {
                 productName: product.productName,
                 price: product.price,
                 description: product.description,
-                image: product.image,
+                image: imageOverride ?? product.image,
                 category: product.category,
             }, {
                 withCredentials: true
@@ -190,6 +213,7 @@ const GlobalContext = ({ children }) => {
                 })
                 fetchProducts()
                 fetchMyProducts()
+                toast.success("Successfully added Product")
                 return result
             }
             else {
@@ -197,6 +221,7 @@ const GlobalContext = ({ children }) => {
             }
         } catch (error) {
             console.error("Error on add product:", error.message)
+            toast.error("Product not Added ")
             return { success: false, message: "Something went wrong" }
         }
     };
@@ -222,10 +247,13 @@ const GlobalContext = ({ children }) => {
                 }
             );
 
-            setOrders(res.data.orderItems);
-
+            const orderItems = res.data.orderItems || [];
+            setOrders(orderItems);
+            return { success: true, orders: orderItems };
         } catch (error) {
             console.log(error);
+            setOrders([]);
+            return { success: false, message: "Failed to fetch orders" };
         }
     };
 
@@ -286,12 +314,13 @@ const GlobalContext = ({ children }) => {
                     withCredentials: true,
                 }
             );
-
+            toast.success("Successfully removed")
             setMyProducts((pre) =>
                 pre.filter((product) => product._id !== id)
             );
         } catch (error) {
             console.log(error);
+            toast.error("Not Removed")
         }
     };
 
@@ -324,8 +353,10 @@ const GlobalContext = ({ children }) => {
                 category: "",
             })
             fetchMyProducts()
+            toast.success("Successfully Update")
             return res.data
         } catch (error) {
+            toast.error("Something went wrong")
             console.error(error.message);
 
         }
@@ -335,7 +366,7 @@ const GlobalContext = ({ children }) => {
         fetchProducts()
         authCheck();
     }, [])
-    
+
     return (
         <div>
             <authContext.Provider value={{
@@ -350,6 +381,7 @@ const GlobalContext = ({ children }) => {
                 setUserInfo,
                 isUserLoggedIn,
                 setIsUserLoggedIn,
+                isAuthReady,
                 authCheck,
 
             }}>

@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState(null);
   const navigate = useNavigate();
   const { loginUserData, setLoginUserData, userLogin, isUserLoggedIn } = useContext(authContext);
 
@@ -22,7 +21,6 @@ const Login = () => {
     setIsLoading(true);
     e.preventDefault();
     let result = await userLogin();
-    setResult(result);
     setIsLoading(false);
     if (result.success) {
       navigate("/");
@@ -98,16 +96,6 @@ const Login = () => {
                 </button>
               </div>
             </div>
-            {result && (
-              <div
-                className={`mt-4 p-4 rounded-xl ${result.success
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-                  }`}
-              >
-                {result.message}
-              </div>
-            )}
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between text-sm">
 
