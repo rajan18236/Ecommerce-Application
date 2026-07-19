@@ -42,25 +42,25 @@ const SellerProducts = () => {
 
       </div>
 
-      <div className="overflow-x-auto bg-white rounded-xl shadow">
+        <div className="overflow-x-auto bg-white rounded-xl shadow">
 
-        <table className="w-full">
+          <table className="w-full">
 
-          <thead className="bg-gray-100">
-            <tr >
+            <thead className="bg-gray-100">
+              <tr >
 
-              <th className="py-4">Image</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Actions</th>
+                <th className="py-4">Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Actions</th>
 
-            </tr>
+              </tr>
 
-          </thead>
+            </thead>
 
           <tbody className="text-center">
-            {myProducts && myProducts.length !== 0 ? myProducts.map((product) => (
+            {myProducts.map((product) => (
 
               <tr
                 key={product._id}
@@ -111,13 +111,13 @@ const SellerProducts = () => {
               </tr>
 
             )
-            ) : <h1 className="text-xl text-gray-500 text-center">You don't have any Product </h1>}
+            )}
 
-          </tbody>
+            </tbody>
 
-        </table>
+          </table>
 
-      </div>
+        </div>
 
     </div>
   );

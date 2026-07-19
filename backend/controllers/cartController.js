@@ -70,7 +70,7 @@ const updateCartQty = async (req, res) => {
         } else {
             user.cartItems[idx].productQty = qty;
             await user.save()
-            res.status(200).json({ success: true, message: 'Successfully to update' })
+            res.status(200).json({ success: true, message: 'Successfully to update' ,user:user.cartItems[idx]})
         }
     } catch (error) {
         console.log("Error on updateCartQty:", error.message);

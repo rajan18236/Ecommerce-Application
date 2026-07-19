@@ -6,7 +6,7 @@ import { productContext } from "../context/GlobalContext";
 
 const Cart = () => {
 
-  const { fetchCartItems, cartItems, setCartItems, removeFromCart, stripePayment } = useContext(productContext)
+  const { fetchCartItems, cartItems, setCartItems, removeFromCart, stripePayment, updateCartItem } = useContext(productContext)
 
   const [result, setResult] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -17,25 +17,42 @@ const Cart = () => {
     await stripePayment()
     setIsLoading(false)
   }
-  const increaseQty = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item._id === id
-          ? { ...item, productQty: item.productQty + 1 }
-          : item
-      )
-    );
-  };
 
-  const decreaseQty = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item._id === id && item.productQty > 1
-          ? { ...item, productQty: item.productQty - 1 }
-          : item
-      )
-    );
-  };
+  const increaseQty = async (id) => {
+  const item = cartItems.find((item) => item._id === id);
+
+  if (!item) return;
+
+  const updatedQty = item.productQty + 1;
+
+  setCartItems((items) =>
+    items.map((item) =>
+      item._id === id
+        ? { ...item, productQty: updatedQty }
+        : item
+    )
+  );
+
+  await updateCartItem(id, updatedQty);
+};
+
+  const decreaseQty = async (id) => {
+  const item = cartItems.find((item) => item._id === id);
+
+  if (!item) return;
+
+  const updatedQty = item.productQty - 1;
+
+  setCartItems((items) =>
+    items.map((item) =>
+      item._id === id
+        ? { ...item, productQty: updatedQty }
+        : item
+    )
+  );
+
+  await updateCartItem(id, updatedQty);
+  }
 
   const removeItem = async (id) => {
     const result = await removeFromCart(id)
@@ -79,9 +96,9 @@ const Cart = () => {
               </p>
             </div>
           ) : (
-            cartItems.map((item, idx) => (
+            cartItems.map((item) => (
               <div
-                key={idx}
+                key={item._id}
                 className="bg-white rounded-2xl shadow p-5 flex flex-col md:flex-row gap-5 items-center"
               >
 

@@ -14,7 +14,7 @@ import { TbReportAnalyticsFilled } from "react-icons/tb"
 
 const Navbar = () => {
     const navigate = useNavigate();
-    const { userLogout, userInfo, isUserLoggedIn, setIsUserLoggedIn } = useContext(authContext);
+    const { userLogout, userInfo, isUserLoggedIn, } = useContext(authContext);
 
     const isSeller = userInfo?.role === "seller"
     const handleLogout = async () => {

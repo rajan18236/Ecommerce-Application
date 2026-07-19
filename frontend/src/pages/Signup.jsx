@@ -2,7 +2,7 @@ import { Eye, EyeOff, Mail, Lock, User, UserRound } from "lucide-react";
 import { useContext } from "react";
 import { useState } from "react";
 import { authContext } from "../context/GlobalContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -185,9 +185,9 @@ const Signup = () => {
           {/* Login */}
           <p className="text-center mt-6 text-gray-600">
             Already have an account?
-            <span className="text-black font-semibold cursor-pointer ml-2 hover:underline">
+            <Link to={"/login"} className="text-black font-semibold cursor-pointer ml-2 hover:underline">
               Login
-            </span>
+            </Link>
           </p>
 
         </div>

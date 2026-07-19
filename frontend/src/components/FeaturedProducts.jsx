@@ -8,7 +8,7 @@ const FeaturedProducts = () => {
   const navigate = useNavigate();
   const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart, cartItems } = useContext(productContext);
   const { isUserLoggedIn } = useContext(authContext);
-  console.log(featuredProducts);
+
 
 
   const handleAddToCart = async (productId) => {

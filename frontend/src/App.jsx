@@ -16,21 +16,19 @@ import { authContext, productContext } from './context/GlobalContext'
 import EditProduct from './pages/EditProduct'
 import { Toaster } from 'react-hot-toast';
 
-const App = () => {
+
+const ProtectedRoute = ({ children }) => {
   const { isUserLoggedIn, isAuthReady, authCheck } = useContext(authContext);
-  const { fetchProducts } = useContext(productContext)
-
-  useEffect(() => {
-    authCheck()
-  }, [])
-
-  const ProtectedRoute = ({ children }) => {
-    if (!isAuthReady) {
-      return <div className="p-6 text-center text-gray-600">Checking session...</div>
-    }
-
-    return isUserLoggedIn ? children : <Navigate to="/login" replace />
+  if (!isAuthReady) {
+    return <div className="p-6 text-center text-gray-600">Checking session...</div>
   }
+
+  return isUserLoggedIn ? children : <Navigate to="/login" replace />
+}
+
+
+const App = () => {
+  const { fetchProducts } = useContext(productContext)
 
   return (
     <div className='min-h-screen relative overflow-hidden'>

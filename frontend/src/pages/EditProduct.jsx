@@ -4,15 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { productContext } from "../context/GlobalContext";
 
 const EditProduct = () => {
-    const { product, setProduct, fetchProductById, editProduct } = useContext(productContext)
+    const { productForEdit, setProductForEdit, fetchProductById, editProduct } = useContext(productContext)
     const { id } = useParams();
     const navigate = useNavigate();
     const categories = ["Electronics", "Clothing", "Books", "Home & Kitchen", "Sports & Outdoors", "Beauty & Personal Care", "Toys & Games", "Automotive", "Health & Wellness", "Others"]
 
     const handleChange = (e) => {
-
-        setProduct({
-            ...product,
+        setProductForEdit({
+            ...productForEdit,
             [e.target.name]: e.target.value,
         });
 
@@ -26,6 +25,14 @@ const EditProduct = () => {
         }
 
     };
+
+    useEffect(() => {
+        if (!productForEdit) {
+            fetchProductById(id);
+        }
+    }, [id]);
+
+    if (!productForEdit) return <div>Loading...</div>
 
     return (
 
@@ -43,14 +50,14 @@ const EditProduct = () => {
             >
 
                 <img
-                    src={product.image}
+                    src={productForEdit.image}
                     className="w-44 h-44 rounded-lg object-cover"
                 />
 
                 <input
                     type="text"
                     name="productName"
-                    value={product.productName}
+                    value={productForEdit.productName}
                     onChange={handleChange}
                     placeholder="Product Name"
                     className="w-full border rounded-lg p-3"
@@ -59,7 +66,7 @@ const EditProduct = () => {
                 <input
                     type="number"
                     name="price"
-                    value={product.price}
+                    value={productForEdit.price}
                     onChange={handleChange}
                     placeholder="Price"
                     className="w-full border rounded-lg p-3"
@@ -67,11 +74,11 @@ const EditProduct = () => {
 
                 <select
                     name="category"
-                    value={product.category}
+                    value={productForEdit.category}
                     onChange={handleChange}
                     className="w-full border rounded-lg p-3"
                 >
-                    <option value={product.category}>{product.category}</option>
+                    <option value={productForEdit.category}>{productForEdit.category}</option>
                     {categories.map(category =>
                         <option key={category} value={category}>{category}</option>
                     )}
@@ -81,7 +88,7 @@ const EditProduct = () => {
                 <textarea
                     rows="5"
                     name="description"
-                    value={product.description}
+                    value={productForEdit.description}
                     onChange={handleChange}
                     className="w-full border rounded-lg p-3"
                 />

@@ -8,7 +8,6 @@ const stripePromise = loadStripe('pk_test_51TsfI742willoDNog4TVCUdNfqTXXT64jxRJk
 
 export const authContext = createContext();
 export const productContext = createContext();
-export const orderContext = createContext();
 
 
 const GlobalContext = ({ children }) => {
@@ -31,6 +30,7 @@ const GlobalContext = ({ children }) => {
     const [caterogyItems, setCaterogyItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [orders, setOrders] = useState([]);
+    const [productForEdit, setProductForEdit] = useState(null)
 
 
     const userRegistration = async () => {
@@ -142,16 +142,20 @@ const GlobalContext = ({ children }) => {
         }
     }
 
-    const updateCartItem = async (qty) => {
-        const res = await axios.patch(`http://localhost:5000/api/cart/removeFromCart`, {})
+    const updateCartItem = async (cartId, qty) => {
+          console.log(cartId, qty);
+        try {
+            const res = await axios.patch(`http://localhost:5000/api/cart/updateCart`, { cartId, qty }, { withCredentials: true })
+        } catch (error) {
+            console.error(error.message);
+
+        }
     }
 
     const fetchCartItems = async () => {
         try {
             const res = await axios.get(`http://localhost:5000/api/cart/getAllCartItems`, { withCredentials: true })
             const result = await res.data;
-            console.log(result);
-
             if (result.success) {
                 setCartItems(result.items)
             }
@@ -183,13 +187,7 @@ const GlobalContext = ({ children }) => {
     };
 
 
-    const [product, setProduct] = useState({
-        productName: "",
-        price: "",
-        description: "",
-        image: "",
-        category: "",
-    });
+
 
     const addProduct = async (imageOverride) => {
         try {
@@ -333,7 +331,7 @@ const GlobalContext = ({ children }) => {
                 }
             );
 
-            setProduct(res.data.product);
+            setProductForEdit(res.data.product);
 
         } catch (error) {
             console.log(error);
@@ -343,15 +341,11 @@ const GlobalContext = ({ children }) => {
     const editProduct = async (productId) => {
         try {
             const res = await axios.put(`http://localhost:5000/api/product/edit`, {
-                productData: product
+                productData: productForEdit
             }, { withCredentials: true })
-            setProduct({
-                productName: "",
-                price: "",
-                description: "",
-                image: "",
-                category: "",
-            })
+            setProductForEdit(
+                null
+            )
             fetchMyProducts()
             toast.success("Successfully Update")
             return res.data
@@ -386,8 +380,6 @@ const GlobalContext = ({ children }) => {
 
             }}>
                 <productContext.Provider value={{
-                    product,
-                    setProduct,
                     addProduct,
                     fetchProductsByCategory,
                     caterogyItems,
@@ -410,7 +402,9 @@ const GlobalContext = ({ children }) => {
                     setMyProducts,
                     deleteProduct,
                     fetchProductById,
-                    editProduct
+                    editProduct,
+                    productForEdit, setProductForEdit,
+                    updateCartItem
                     // updateProduct,
                     // deleteProduct
                 }}>

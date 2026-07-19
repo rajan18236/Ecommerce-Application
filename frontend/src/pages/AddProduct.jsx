@@ -5,15 +5,24 @@ import { productContext } from "../context/GlobalContext";
 const categories = ["Electronics", "Clothing", "Books", "Home & Kitchen", "Sports & Outdoors", "Beauty & Personal Care", "Toys & Games", "Automotive", "Health & Wellness", "Others"]
 
 const AdminAddProduct = () => {
-  const { product, setProduct, addProduct, } = useContext(productContext)
+  const { addProduct, } = useContext(productContext)
   const [isLoading, setIsLoading] = useState(false)
+
+
+  const [product, setProduct] = useState({
+    productName: "",
+    price: "",
+    description: "",
+    image: "",
+    category: "",
+  });
   const ref = useRef(null)
   const [imagePreview, setImagePreview] = useState("")
   const handleChange = (e) => {
-    setProduct((prev) => ({
-      ...prev,
+    setProduct({
+      ...product,
       [e.target.name]: e.target.value,
-    }));
+    });
   };
 
   const handleSubmit = async (e) => {
