@@ -1,11 +1,13 @@
 import React, { useContext, useEffect } from 'react'
-import { productContext } from '../context/GlobalContext'
+import { Heart, ShoppingCart, Star } from "lucide-react";
+import { authContext, productContext } from '../context/GlobalContext'
 
 const Category = () => {
+  const { userInfo } = useContext(authContext)
   const { caterogyItems, setCaterogyItems, getProductsByCategory } = useContext(productContext);
   console.log(caterogyItems);
+  const isSeller = userInfo?.role === 'seller'
 
-  
   return (
     <section className="max-w-7xl mx-auto px-5 py-16 mt-10 ">
       <h1 className="text-gray-800 text-2xl font-semibold uppercase tracking-widest mb-4"></h1>
@@ -43,9 +45,22 @@ const Category = () => {
                 </span>
               </div>
 
-              {/* Button */}
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-xl hover:bg-orange-500 duration-300 flex items-center justify-center gap-2">
-                Add to Cart
+             <button
+                className={`mt-5 w-full bg-black text-white py-3 rounded-xl  duration-300 flex items-center justify-center gap-2 ${isSeller || item.stock === 0 ? "bg-gray-500 cursor-not-allowed" : "cursor-pointer"}`}
+                disabled={isSeller || item.stock === 0}
+                onClick={() => {
+                  if (!isUserLoggedIn) {
+                    navigate("/login");
+                    return;
+                  }
+
+                  handleAddToCart(item._id);
+                }}
+              >
+                {item.stock > 0 ?
+                  "Add to Cart"
+                  :
+                  "Out Of Stock"}
               </button>
             </div>
           </div>

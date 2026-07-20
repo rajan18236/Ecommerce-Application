@@ -15,6 +15,7 @@ import Orders from './pages/Orders'
 import { authContext, productContext } from './context/GlobalContext'
 import EditProduct from './pages/EditProduct'
 import { Toaster } from 'react-hot-toast';
+import Footer from './components/Footer.jsx'
 
 
 const ProtectedRoute = ({ children }) => {
@@ -77,6 +78,7 @@ const App = () => {
 
           <Route path="*" element={<PageNotFound />} />
         </Routes>
+        <Footer/>
       </div>
       <div>
         <Toaster />

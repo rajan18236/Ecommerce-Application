@@ -189,11 +189,12 @@ const GlobalContext = ({ children }) => {
 
 
 
-    const addProduct = async (imageOverride) => {
+    const addProduct = async (imageOverride,product) => {
         try {
             const res = await axios.post(`http://localhost:5000/api/product/create`, {
                 productName: product.productName,
                 price: product.price,
+                stock:product.stock,
                 description: product.description,
                 image: imageOverride ?? product.image,
                 category: product.category,
@@ -202,13 +203,6 @@ const GlobalContext = ({ children }) => {
             })
             const result = await res.data;
             if (result.success) {
-                setProduct({
-                    productName: "",
-                    price: "",
-                    description: "",
-                    image: "",
-                    category: "",
-                })
                 fetchProducts()
                 fetchMyProducts()
                 toast.success("Successfully added Product")
@@ -219,7 +213,7 @@ const GlobalContext = ({ children }) => {
             }
         } catch (error) {
             console.error("Error on add product:", error.message)
-            toast.error("Product not Added ")
+            toast.error("Not Added ")
             return { success: false, message: "Something went wrong" }
         }
     };

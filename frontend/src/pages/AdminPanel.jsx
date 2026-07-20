@@ -42,22 +42,23 @@ const SellerProducts = () => {
 
       </div>
 
-        <div className="overflow-x-auto bg-white rounded-xl shadow">
+      <div className="overflow-x-auto bg-white rounded-xl shadow">
 
-          <table className="w-full">
+        <table className="w-full">
 
-            <thead className="bg-gray-100">
-              <tr >
+          <thead className="bg-gray-100">
+            <tr >
 
-                <th className="py-4">Image</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Actions</th>
+              <th className="py-4">Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
 
-              </tr>
+            </tr>
 
-            </thead>
+          </thead>
 
           <tbody className="text-center">
             {myProducts.map((product) => (
@@ -81,6 +82,8 @@ const SellerProducts = () => {
                 <td>{product.category}</td>
 
                 <td>${product.price}</td>
+
+                <td>{product.stock > 0 ? product.stock : "No Stock"}</td>
 
                 <td>
 
@@ -113,11 +116,11 @@ const SellerProducts = () => {
             )
             )}
 
-            </tbody>
+          </tbody>
 
-          </table>
+        </table>
 
-        </div>
+      </div>
 
     </div>
   );

@@ -6,15 +6,16 @@ const createProduct = async (req, res) => {
         const {
             productName,
             price,
+            stock,
             description,
             image,
             category,
         } = req.body;
 
-        if (!productName || !price || !description || !image || !category) {
+        if (!productName || !price ||!stock || !description || !image || !category) {
             return res.status(400).json({
                 success: false,
-                message: "All fields are required",
+                message: "All fields are requir\ed",
             });
         }
 
@@ -26,6 +27,7 @@ const createProduct = async (req, res) => {
             productName,
             image: cloudinaryResponse.secure_url,
             price,
+            stock,
             description,
             category,
             seller: req.user._id,
@@ -126,7 +128,7 @@ const getProductById = async (req, res) => {
 
 const editProduct = async (req, res) => {
     try {
-        let {productData } = req.body;
+        let {productData} = req.body;
         console.log( productData);
 
         let product = await productModel.findByIdAndUpdate(productData._id  ,  productData );

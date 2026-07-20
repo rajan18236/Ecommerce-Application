@@ -71,6 +71,14 @@ const EditProduct = () => {
                     placeholder="Price"
                     className="w-full border rounded-lg p-3"
                 />
+                <input
+                    type="number"
+                    name="stock"
+                    value={productForEdit.stock}
+                    onChange={handleChange}
+                    placeholder="Number of Stocks"
+                    className="w-full border rounded-lg p-3"
+                />
 
                 <select
                     name="category"

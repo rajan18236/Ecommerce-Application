@@ -1,4 +1,4 @@
-import { Image, Package, DollarSign, FileText, List } from "lucide-react";
+import { Image, Package, DollarSign, FileText, List, Boxes } from "lucide-react";
 import { useContext, useState, useRef } from "react";
 import { productContext } from "../context/GlobalContext";
 
@@ -12,6 +12,7 @@ const AdminAddProduct = () => {
   const [product, setProduct] = useState({
     productName: "",
     price: "",
+    stock: "",
     description: "",
     image: "",
     category: "",
@@ -28,11 +29,19 @@ const AdminAddProduct = () => {
   const handleSubmit = async (e) => {
     setIsLoading(true)
     e.preventDefault();
-    let result = await addProduct(imagePreview)
+    let result = await addProduct(imagePreview, product)
     setIsLoading(false)
     if (result.success) {
       ref.current.value = ""
       setImagePreview("")
+      setProduct({
+        productName: "",
+        price: "",
+        stock: "",
+        description: "",
+        image: "",
+        category: "",
+      })
     }
   };
 
@@ -102,6 +111,26 @@ const AdminAddProduct = () => {
                 type="number"
                 name="price"
                 value={product.price}
+                onChange={handleChange}
+                placeholder="99"
+                className="w-full p-4 outline-none"
+                required
+              />
+            </div>
+          </div>
+          {/* Stock */}
+          <div>
+            <label className="font-medium">
+              Number of Stock
+            </label>
+
+            <div className="flex items-center border rounded-xl mt-2 px-4">
+              <Boxes className="text-gray-400" size={20} />
+
+              <input
+                type="number"
+                name="stock"
+                value={product.stock}
                 onChange={handleChange}
                 placeholder="99"
                 className="w-full p-4 outline-none"

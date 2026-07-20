@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 const FeaturedProducts = () => {
   const navigate = useNavigate();
+  const { userInfo } = useContext(authContext)
   const { featuredProducts, setFeaturedProducts, fetchProducts, addToCart, cartItems } = useContext(productContext);
   const { isUserLoggedIn } = useContext(authContext);
+  const isSeller = userInfo?.role === "seller"
+
 
 
 
@@ -20,7 +23,7 @@ const FeaturedProducts = () => {
       <h1 className="text-gray-800 text-2xl font-semibold uppercase tracking-widest text-center mb-12">Featured Products</h1>
       {/* Product Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {featuredProducts && featuredProducts.length > 0 ? featuredProducts.map((product, idx) => (
+        {featuredProducts && featuredProducts.length > 0 ? featuredProducts.toReversed().map((product, idx) => (
           <div
             key={idx}
             className="bg-white rounded-3xl overflow-hidden shadow hover:shadow-xl duration-300 group"
@@ -59,7 +62,8 @@ const FeaturedProducts = () => {
 
               {/* Button */}
               <button
-                className="mt-5 w-full bg-black text-white py-3 rounded-xl cursor-pointer duration-300 flex items-center justify-center gap-2 active:scale-90 "
+                className={`mt-5 w-full bg-black text-white py-3 rounded-xl  duration-300 flex items-center justify-center gap-2 ${isSeller || product.stock === 0 ? "bg-gray-500 cursor-not-allowed" : "cursor-pointer"}`}
+                disabled={isSeller || product.stock === 0}
                 onClick={() => {
                   if (!isUserLoggedIn) {
                     navigate("/login");
@@ -69,8 +73,10 @@ const FeaturedProducts = () => {
                   handleAddToCart(product._id);
                 }}
               >
-                <ShoppingCart size={24} />
-                Add to Cart
+                {product.stock > 0 ?
+                  "Add to Cart"
+                  :
+                  "Out Of Stock"}
               </button>
             </div>
           </div>

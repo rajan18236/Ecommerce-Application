@@ -25,7 +25,7 @@ const Orders = () => {
         <div className="max-w-6xl mx-auto py-10 mt-10">
             <h1 className="text-3xl font-bold mb-8">My Orders</h1>
 
-            {orders.map(order => (
+            {orders.toReversed().map(order => (
                 <div
                     key={order._id}
                     className="bg-white rounded-xl shadow mb-8 p-6"

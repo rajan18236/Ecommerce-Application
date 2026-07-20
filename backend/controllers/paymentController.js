@@ -1,4 +1,5 @@
 const { rawListeners } = require("../models/adminModel");
+const productModel = require("../models/productModel")
 const stripe = require("../config/stripeConfig")
 const orderModel = require("../models/orderModel")
 
@@ -57,8 +58,8 @@ const createCheckoutSession = async (req, res) => {
 
 const checkoutSuccess = async (req, res) => {
     try {
-        const { sessionId,orderNo } = req.body;
-        const session = await stripe.checkout.sessions.retrieve(sessionId);      
+        const { sessionId, orderNo } = req.body;
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
         const existingOrder = await orderModel.findOne({
             stripeSessionId: session.id,
         });
@@ -88,6 +89,16 @@ const checkoutSuccess = async (req, res) => {
                 message: 'Payment successful, order created',
                 orderId: newOrder._id,
             })
+
+            products.map(async (product) => {
+                let p = await productModel.findById(product.id)
+                if(!p){
+                    return res.json({message:"product not found"})
+                }
+                p.stock -= product.quantity
+                await p.save()
+            })
+
         }
     } catch (error) {
         console.log("Error processing successful checkout:", error.message);

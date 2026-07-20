@@ -96,7 +96,7 @@ const Cart = () => {
               </p>
             </div>
           ) : (
-            cartItems.map((item) => (
+            cartItems.toReversed().map((item) => (
               <div
                 key={item._id}
                 className="bg-white rounded-2xl shadow p-5 flex flex-col md:flex-row gap-5 items-center"
