@@ -8,6 +8,7 @@ const stripePromise = loadStripe('pk_test_51TsfI742willoDNog4TVCUdNfqTXXT64jxRJk
 
 export const authContext = createContext();
 export const productContext = createContext();
+export const adminContext = createContext();
 
 
 const GlobalContext = ({ children }) => {
@@ -143,7 +144,7 @@ const GlobalContext = ({ children }) => {
     }
 
     const updateCartItem = async (cartId, qty) => {
-          console.log(cartId, qty);
+        console.log(cartId, qty);
         try {
             const res = await axios.patch(`http://localhost:5000/api/cart/updateCart`, { cartId, qty }, { withCredentials: true })
         } catch (error) {
@@ -189,12 +190,12 @@ const GlobalContext = ({ children }) => {
 
 
 
-    const addProduct = async (imageOverride,product) => {
+    const addProduct = async (imageOverride, product) => {
         try {
             const res = await axios.post(`http://localhost:5000/api/product/create`, {
                 productName: product.productName,
                 price: product.price,
-                stock:product.stock,
+                stock: product.stock,
                 description: product.description,
                 image: imageOverride ?? product.image,
                 category: product.category,
@@ -402,9 +403,11 @@ const GlobalContext = ({ children }) => {
                     // updateProduct,
                     // deleteProduct
                 }}>
+                    <adminContext.Provider value={ {}}>
 
 
-                    {children}
+                        {children}
+                    </adminContext.Provider>
 
                 </productContext.Provider>
             </authContext.Provider>

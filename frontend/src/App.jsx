@@ -16,10 +16,12 @@ import { authContext, productContext } from './context/GlobalContext'
 import EditProduct from './pages/EditProduct'
 import { Toaster } from 'react-hot-toast';
 import Footer from './components/Footer.jsx'
+import AdminDashBoard from './pages/AdminDashBoard.jsx'
+import AdminProducts from './pages/AdminProducts.jsx'
 
 
 const ProtectedRoute = ({ children }) => {
-  const { isUserLoggedIn, isAuthReady, authCheck } = useContext(authContext);
+  const { isUserLoggedIn, isAuthReady, userInfo } = useContext(authContext);
   if (!isAuthReady) {
     return <div className="p-6 text-center text-gray-600">Checking session...</div>
   }
@@ -29,56 +31,73 @@ const ProtectedRoute = ({ children }) => {
 
 
 const App = () => {
-  const { fetchProducts } = useContext(productContext)
+  const { fetchProducts } = useContext(productContext);
+  const { userInfo } = useContext(authContext);
 
   return (
     <div className='min-h-screen relative overflow-hidden'>
-      <div >
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
+      <div className='h-full  w-full gridS'>
+        <div>
+          <Navbar />
+        </div>
+        <div>
+          {userInfo.role === "admin" ?
+            <Routes>
+              <Route path='/' element={<ProtectedRoute><AdminDashBoard /></ProtectedRoute>} />
+              <Route path={'/adminproducts'} element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+            </Routes>
+            :
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/cartItem"
+                element={<ProtectedRoute><Cart /></ProtectedRoute>}
+              />
 
-          <Route
-            path="/cartItem"
-            element={<ProtectedRoute><Cart /></ProtectedRoute>}
-          />
+              <Route
+                path="/category"
+                element={<ProtectedRoute><Category /></ProtectedRoute>}
+              />
 
-          <Route
-            path="/category"
-            element={<ProtectedRoute><Category /></ProtectedRoute>}
-          />
+              <Route
+                path="/orders"
+                element={<ProtectedRoute><Orders /></ProtectedRoute>}
+              />
 
-          <Route
-            path="/orders"
-            element={<ProtectedRoute><Orders /></ProtectedRoute>}
-          />
+              <Route
+                path="/addproduct"
+                element={<ProtectedRoute><AddProduct /></ProtectedRoute>}
+              />
+              <Route
+                path="/adminpanel"
+                element={<ProtectedRoute><AdminPanel /></ProtectedRoute>}
+              />
 
-          <Route
-            path="/addproduct"
-            element={<ProtectedRoute><AddProduct /></ProtectedRoute>}
-          />
-          <Route
-            path="/adminpanel"
-            element={<ProtectedRoute><AdminPanel /></ProtectedRoute>}
-          />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
 
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
+              <Route
+                path="/purchase-success"
+                element={<ProtectedRoute><PurchaseSuccessPage /></ProtectedRoute>}
+              />
 
-          <Route
-            path="/purchase-success"
-            element={<ProtectedRoute><PurchaseSuccessPage /></ProtectedRoute>}
-          />
+              <Route
+                path="/purchase-cancel"
+                element={<ProtectedRoute><PurchaseCancelPage /></ProtectedRoute>}
+              />
+              <Route path="/edit-product/:id" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
 
-          <Route
-            path="/purchase-cancel"
-            element={<ProtectedRoute><PurchaseCancelPage /></ProtectedRoute>}
-          />
-          <Route path="/edit-product/:id" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>}
 
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-        <Footer/>
+
+        </div>
+        {userInfo?.role !== "admin" &&
+          <div>
+            <Footer />
+
+          </div>
+        }
       </div>
       <div>
         <Toaster />
