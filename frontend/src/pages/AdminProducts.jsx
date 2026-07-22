@@ -1,53 +1,69 @@
 import React, { useContext } from 'react'
 import { productContext } from '../context/GlobalContext'
+import { Pencil, Trash2, Plus, Info  } from "lucide-react";
 
 const AdminProducts = () => {
-  const { myProducts } = useContext(productContext)
+  const { featuredProducts } = useContext(productContext)
   return (
-    <div className='mt-10'>hello</div>
-    // <div className='mt-20'>
-    //   {
-    //     myProducts.toReversed().map(product => (
-    //  <div
-    //         key={idx}
-    //         className="bg-white rounded-3xl overflow-hidden shadow hover:shadow-xl duration-300 group"
-    //       >
-    //         {/* Image */}
-    //         <div className="relative overflow-hidden">
-    //           <img
-    //             src={product.image}
-    //             alt={product.name}
-    //             className="h-72 w-full object-cover group-hover:scale-110 duration-500"
-    //           />
-    //         </div>
+    <div className='max-w-7xl mx-auto py-10 px-5 mt-10 ' >
+      <div >
+        <table className='w-full px-2 py-4 '>
+          <thead>
+            <tr className=' bg-gray-100'>
+            <th className='py-2'>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Seller</th>
+            <th>Action</th>
+            </tr>
+          </thead>
 
-    //         {/* Details */}
-    //         <div className="p-5">
-    //           <div className="flex justify-between">
+          <tbody>
+            {featuredProducts.toReversed().map((product, idx) => (
+              <tr className='text-center'>
+                <td className='p-2'>
+                  <div className='w-20 h-20 rounded-2xl overflow-hidden'><img className='w-full h-full object-cover' src={product.image} alt={product.productName} />
+                  </div>
+                </td>
+                <td>
+                  <div> {product.productName}   </div>
+                </td>
+                <td><div>${product.price}</div></td>
+                <td><div>{product.seller.fullName}</div></td>
+                <td> <div className="flex gap-3 justify-center">
 
-    //             <p className="text-sm text-orange-500">
-    //               @{product.seller.fullName}
-    //             </p>
-    //             <p className="text-sm text-orange-500">
-    //               #{product.category}
-    //             </p>
-    //           </div>
+                    <button
+                      onClick={() => {
+                        navigate(`/edit-product/${product._id}`)
+                        fetchProductById(product._id)
+                      }
+                      }
+                      className="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600"
+                    >
+                      <Pencil size={18} />
+                    </button>
 
-    //           <h3 className="font-semibold text-lg mt-1">
-    //             {product.productName}
-    //           </h3>
+                    <button
+                      onClick={() => deleteProduct(product._id)}
+                      className="p-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => deleteProduct(product._id)}
+                      className="p-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600"
+                    >
+                    <Info  size={18}/>
+                    </button>
 
-    //           {/* Price */}
-    //           <div className="flex items-center gap-3">
-    //             <span className="text-xl font-bold">
-    //               ${product.price}
-    //             </span>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     ))
-    //   }
-    // </div>
+                  </div></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
   )
 }
 

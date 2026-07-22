@@ -41,54 +41,64 @@ const App = () => {
           <Navbar />
         </div>
         <div>
-          {userInfo.role === "admin" ?
-            <Routes>
-              <Route path='/' element={<ProtectedRoute><AdminDashBoard /></ProtectedRoute>} />
-              <Route path={'/adminproducts'} element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
-            </Routes>
-            :
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/cartItem"
-                element={<ProtectedRoute><Cart /></ProtectedRoute>}
-              />
+          <Routes>
+            <Route
+              path="/" element={userInfo.role === "admin" ? <AdminDashBoard /> : <Home />}
+            />
 
-              <Route
-                path="/category"
-                element={<ProtectedRoute><Category /></ProtectedRoute>}
-              />
+            <Route
+              path="/cartItem"
+              element={<ProtectedRoute> <Cart /></ProtectedRoute>}
+            />
+            <Route
+              path='/adminproducts' element={<AdminProducts />}
+            />
 
-              <Route
-                path="/orders"
-                element={<ProtectedRoute><Orders /></ProtectedRoute>}
-              />
+            <Route
+              path="/category"
+              element={<ProtectedRoute><Category /></ProtectedRoute>}
+            />
 
-              <Route
-                path="/addproduct"
-                element={<ProtectedRoute><AddProduct /></ProtectedRoute>}
-              />
-              <Route
-                path="/adminpanel"
-                element={<ProtectedRoute><AdminPanel /></ProtectedRoute>}
-              />
+            <Route
+              path="/orders"
+              element={<ProtectedRoute><Orders /></ProtectedRoute>}
+            />
 
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
+            <Route
+              path="/addproduct"
+              element={<ProtectedRoute><AddProduct /></ProtectedRoute>}
+            />
+            <Route
+              path="/adminpanel"
+              element={<ProtectedRoute><AdminPanel /></ProtectedRoute>}
+            />
 
-              <Route
-                path="/purchase-success"
-                element={<ProtectedRoute><PurchaseSuccessPage /></ProtectedRoute>}
-              />
+            <Route
+              path="/signup" element={<Signup />}
+            />
 
-              <Route
-                path="/purchase-cancel"
-                element={<ProtectedRoute><PurchaseCancelPage /></ProtectedRoute>}
-              />
-              <Route path="/edit-product/:id" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
+            <Route
+              path="/login" element={<Login />}
+            />
 
-              <Route path="*" element={<PageNotFound />} />
-            </Routes>}
+            <Route
+              path="/purchase-success"
+              element={<ProtectedRoute><PurchaseSuccessPage /></ProtectedRoute>}
+            />
+
+            <Route
+              path="/purchase-cancel"
+              element={<ProtectedRoute><PurchaseCancelPage /></ProtectedRoute>}
+            />
+
+            <Route
+              path="/edit-product/:id" element={<ProtectedRoute><EditProduct /></ProtectedRoute>}
+            />
+
+            <Route
+              path="*" element={<PageNotFound />}
+            />
+          </Routes>
 
 
         </div>
