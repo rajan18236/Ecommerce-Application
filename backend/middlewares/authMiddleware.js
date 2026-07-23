@@ -45,16 +45,23 @@ const isLoggedIn = async (req, res, next) => {
 
 
 
-const isAdmin = async (req, res, next) => {
-    try {
-        if (!req.user || req.user.role !== "seller") {
-            return res.status(403).json({
-                message: "Admin access only."
+const authorizeRoles = (...roles) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
             });
         }
+
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({
+                success: false,
+                message: "Access denied",
+            });
+        }
+
         next();
-    } catch (error) {
-        res.status(500).json({ error: "Unauthorized - Admin only " })
-    }
-}
-module.exports = { isLoggedIn, isAdmin }
+    };
+};
+module.exports = { isLoggedIn, authorizeRoles }

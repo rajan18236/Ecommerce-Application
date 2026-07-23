@@ -36,7 +36,11 @@ const productSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
         required: true,
-    }
+    },
+    isBlocked:{
+        type:Boolean,
+        default:false,
+    },
 }, {
     timestamp: true
 }

@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { productContext } from "../context/GlobalContext";
+import { authContext, productContext } from "../context/GlobalContext";
 
 const EditProduct = () => {
-    const { productForEdit, setProductForEdit, fetchProductById, editProduct } = useContext(productContext)
+    const { productForEdit, setProductForEdit, fetchProductById, editProduct } = useContext(productContext);
+    const { userInfo } = useContext(authContext);
     const { id } = useParams();
     const navigate = useNavigate();
     const categories = ["Electronics", "Clothing", "Books", "Home & Kitchen", "Sports & Outdoors", "Beauty & Personal Care", "Toys & Games", "Automotive", "Health & Wellness", "Others"]
@@ -21,7 +22,11 @@ const EditProduct = () => {
         e.preventDefault()
         const result = await editProduct(id)
         if (result.success) {
-            navigate("/adminpanel")
+            if (userInfo.role === "seller") {
+
+                return navigate("/adminpanel")
+            }
+            navigate("/adminproducts")
         }
 
     };

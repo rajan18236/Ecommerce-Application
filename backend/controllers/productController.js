@@ -12,7 +12,7 @@ const createProduct = async (req, res) => {
             category,
         } = req.body;
 
-        if (!productName || !price ||!stock || !description || !image || !category) {
+        if (!productName || !price || !stock || !description || !image || !category) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are requir\ed",
@@ -128,10 +128,10 @@ const getProductById = async (req, res) => {
 
 const editProduct = async (req, res) => {
     try {
-        let {productData} = req.body;
-        console.log( productData);
+        let { productData } = req.body;
+        console.log(productData);
 
-        let product = await productModel.findByIdAndUpdate(productData._id  ,  productData );
+        let product = await productModel.findByIdAndUpdate(productData._id, productData);
         if (!product) {
             return res.status(400).json({ success: true, message: 'Invalid Request product not found' })
         };
@@ -142,4 +142,16 @@ const editProduct = async (req, res) => {
 
     }
 }
-module.exports = { createProduct, getAllProducts, getProductCategory, getProductsOfAdmin, deleteProduct, editProduct, getProductById }
+
+const disableProduct = async (req, res) => {
+    try {
+        const { productId, isBlocked } = req.body;
+        await productModel.findByIdAndUpdate(productId, {isBlocked:isBlocked})
+        res.status(200).json({ success: true, message: 'Product isdisable' })
+    } catch (error) {
+        console.log("Error on disableProduct:", error.message);
+        return res.status(500).json({ success: false, err: error.message })
+
+    }
+}
+module.exports = { createProduct, getAllProducts, getProductCategory, getProductsOfAdmin, deleteProduct, editProduct, getProductById, disableProduct }

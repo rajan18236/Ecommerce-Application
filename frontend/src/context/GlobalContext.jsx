@@ -308,9 +308,8 @@ const GlobalContext = ({ children }) => {
                 }
             );
             toast.success("Successfully removed")
-            setMyProducts((pre) =>
-                pre.filter((product) => product._id !== id)
-            );
+            fetchProducts()
+            fetchMyProducts()
         } catch (error) {
             console.log(error);
             toast.error("Not Removed")
@@ -351,6 +350,19 @@ const GlobalContext = ({ children }) => {
         }
     };
 
+    const disableProducts = async (productId, isBlocked) => {
+        try {
+            const res = await axios.put('http://localhost:5000/api/product/disable', {
+                productId,
+                isBlocked
+            }, {
+                withCredentials: true
+            })
+        } catch (error) {
+            console.error(error.message);
+
+        }
+    }
     useEffect(() => {
         fetchProducts()
         authCheck();
@@ -399,11 +411,12 @@ const GlobalContext = ({ children }) => {
                     fetchProductById,
                     editProduct,
                     productForEdit, setProductForEdit,
-                    updateCartItem
+                    updateCartItem,
+                    disableProducts
                     // updateProduct,
                     // deleteProduct
                 }}>
-                    <adminContext.Provider value={ {}}>
+                    <adminContext.Provider value={{}}>
 
 
                         {children}

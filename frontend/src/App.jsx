@@ -21,7 +21,7 @@ import AdminProducts from './pages/AdminProducts.jsx'
 
 
 const ProtectedRoute = ({ children }) => {
-  const { isUserLoggedIn, isAuthReady, userInfo } = useContext(authContext);
+  const { isUserLoggedIn, isAuthReady } = useContext(authContext);
   if (!isAuthReady) {
     return <div className="p-6 text-center text-gray-600">Checking session...</div>
   }
