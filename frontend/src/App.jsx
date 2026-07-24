@@ -18,6 +18,7 @@ import { Toaster } from 'react-hot-toast';
 import Footer from './components/Footer.jsx'
 import AdminDashBoard from './pages/AdminDashBoard.jsx'
 import AdminProducts from './pages/AdminProducts.jsx'
+import AdminOrders from './pages/AdminOrders.jsx'
 
 
 const ProtectedRoute = ({ children }) => {
@@ -52,6 +53,9 @@ const App = () => {
             />
             <Route
               path='/adminproducts' element={<AdminProducts />}
+            />
+            <Route
+              path='/orderList' element={<AdminOrders />}
             />
 
             <Route

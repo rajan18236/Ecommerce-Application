@@ -10,7 +10,7 @@ router.delete("/delete/:productId", isLoggedIn, authorizeRoles('seller', 'admin'
 router.put("/edit", isLoggedIn, authorizeRoles('seller', 'admin'), editProduct)
 router.get("/:productId", isLoggedIn, authorizeRoles('seller', 'admin'), getProductById)
 router.get("/category/:category", getProductCategory)
-router.put('disable', isLoggedIn, authorizeRoles('admin'), disableProduct)
+router.patch('/disable', isLoggedIn, authorizeRoles('admin'), disableProduct)
 
 
 module.exports = router

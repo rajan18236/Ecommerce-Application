@@ -25,7 +25,6 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRouter);
-// app.use('/api/admin', adminRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/payments',paymentRouter);

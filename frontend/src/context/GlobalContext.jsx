@@ -31,6 +31,7 @@ const GlobalContext = ({ children }) => {
     const [caterogyItems, setCaterogyItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [orders, setOrders] = useState([]);
+    const [orderList, setOrderList] = useState([]);
     const [productForEdit, setProductForEdit] = useState(null)
 
 
@@ -352,7 +353,7 @@ const GlobalContext = ({ children }) => {
 
     const disableProducts = async (productId, isBlocked) => {
         try {
-            const res = await axios.put('http://localhost:5000/api/product/disable', {
+            const res = await axios.patch('http://localhost:5000/api/product/disable', {
                 productId,
                 isBlocked
             }, {
@@ -363,9 +364,22 @@ const GlobalContext = ({ children }) => {
 
         }
     }
+
+    const fetchOrdersList = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/api/orders/getAll',{withCredentials:true})
+            const result = await res.data;
+            setOrderList(result.orders)
+
+        } catch (error) {
+            console.error(error.message);
+
+        }
+    }
     useEffect(() => {
         fetchProducts()
         authCheck();
+        fetchOrdersList();
     }, [])
 
     return (
@@ -416,7 +430,10 @@ const GlobalContext = ({ children }) => {
                     // updateProduct,
                     // deleteProduct
                 }}>
-                    <adminContext.Provider value={{}}>
+                    <adminContext.Provider value={{
+                        fetchOrdersList,
+                        orderList
+                    }}>
 
 
                         {children}

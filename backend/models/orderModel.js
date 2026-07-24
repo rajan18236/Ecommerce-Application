@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const orderSchema = mongoose.Schema({
+ 
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
@@ -31,6 +32,10 @@ const orderSchema = mongoose.Schema({
     stripeSessionId: {
         type: String,
         unique: true
+    },
+    date:{
+        type:Date,
+        default:Date.now,
     },
 }, { timestamps: true }
 )

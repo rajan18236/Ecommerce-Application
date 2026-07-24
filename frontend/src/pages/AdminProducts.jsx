@@ -3,23 +3,23 @@ import { productContext } from '../context/GlobalContext'
 import { Pencil, Trash2, Info } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import ToggleSwitch from '../components/ToggelBtn';
+import ProductDetails from './ProductDetails';
 
 
 const AdminProducts = () => {
-  const { featuredProducts, deleteProduct, fetchProductById, fetchProducts, disableProducts } = useContext(productContext)
+  const { featuredProducts, deleteProduct, fetchProductById, fetchProducts,  } = useContext(productContext)
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(true)
 
-  const handleCheckbox = async (e) => {
-    await disableProducts(e.target.value, e.target.checked)
-  }
+
+
+  
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   return (
-    <div className='max-w-7xl mx-auto py-10 px-5 mt-10 ' >
+    <div className='max-w-7xl mx-auto py-10 px-5 mt-10' >
       <div >
         <table className='w-full px-2 py-4 '>
           <thead>
@@ -27,6 +27,7 @@ const AdminProducts = () => {
               <th className='py-2'>Image</th>
               <th>Name</th>
               <th>Price</th>
+              <th>Category</th>
               <th>Stock</th>
               <th>Seller</th>
               <th>Disable</th>
@@ -45,12 +46,13 @@ const AdminProducts = () => {
                   <div> {product.productName}   </div>
                 </td>
                 <td><div>${product.price}</div></td>
+                <td><div>#{product.category}</div></td>
                 <td>
                   {product.stock > 0 ? <div>{product.stock}</div> : <div className='text-red-500 font-semibold'>No stock</div>}
 
                 </td>
                 <td><div>{product.seller.fullName}</div></td>
-                <td><ToggleSwitch checked={checked} onChange={setChecked}  /></td>
+                <td><ToggleSwitch checked={product.isBlocked} productId={product._id} /></td>
                 <td> <div className="flex gap-3 justify-center">
 
                   <button
@@ -69,12 +71,6 @@ const AdminProducts = () => {
                     className="p-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
                   >
                     <Trash2 size={18} />
-                  </button>
-                  <button
-                    onClick={() => deleteProduct(product._id)}
-                    className="p-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600"
-                  >
-                    <Info size={18} />
                   </button>
 
                 </div></td>

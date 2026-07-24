@@ -3,7 +3,7 @@ const orderModel = require("../models/orderModel");
 
 module.exports.getOrders = async (req, res) => {
     try {
-    const orderItems = await orderModel.find({ userId: req.user._id }).populate("products.product");
+        const orderItems = await orderModel.find({ userId: req.user._id }).populate("products.product");
         if (!orderItems) {
             return res.status(400).json({ message: 'Invalid Request: Order Not found' })
         }
@@ -20,3 +20,16 @@ module.exports.getOrders = async (req, res) => {
         })
     }
 };
+
+module.exports.getAllOrders = async (req, res) => {
+    try {
+        const orders = await orderModel.find()
+        if (!orders) {
+            return res.status(400).json({ message: 'No order Added' })
+        }
+        res.status(200).json({ success: true, orders })
+    } catch (error) {
+        console.log("Error on getAllOrder:",error.message);
+        return res.status(500).json({ success: false, error: error.message })
+    }
+}
