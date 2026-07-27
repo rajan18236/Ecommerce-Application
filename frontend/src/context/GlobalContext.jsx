@@ -367,7 +367,7 @@ const GlobalContext = ({ children }) => {
 
     const fetchOrdersList = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/orders/getAll',{withCredentials:true})
+            const res = await axios.get('http://localhost:5000/api/orders/getAll', { withCredentials: true })
             const result = await res.data;
             setOrderList(result.orders)
 
@@ -375,6 +375,25 @@ const GlobalContext = ({ children }) => {
             console.error(error.message);
 
         }
+    }
+
+    const deleteOrder = async (orderId) => {
+        try {
+            const res = await axios.delete(`http://localhost:5000/api/orders/delete/${orderId}`,{withCredentials:true})
+            const result = await res.data;
+            if (result.success) {
+                toast.success("Successfully Removed")
+                setOrderList((prev) => {
+                    prev.filter((order) => order._id !== orderId)
+                })
+                return;
+            }
+            toast.error("Something went wrong")
+        } catch (error) {
+            console.error(error.message);
+
+        }
+
     }
     useEffect(() => {
         fetchProducts()
@@ -432,7 +451,8 @@ const GlobalContext = ({ children }) => {
                 }}>
                     <adminContext.Provider value={{
                         fetchOrdersList,
-                        orderList
+                        orderList,
+                        deleteOrder,
                     }}>
 
 
