@@ -383,9 +383,7 @@ const GlobalContext = ({ children }) => {
             const result = await res.data;
             if (result.success) {
                 toast.success("Successfully Removed")
-                setOrderList((prev) => {
-                    prev.filter((order) => order._id !== orderId)
-                })
+                fetchOrdersList()
                 return;
             }
             toast.error("Something went wrong")
@@ -398,7 +396,6 @@ const GlobalContext = ({ children }) => {
     useEffect(() => {
         fetchProducts()
         authCheck();
-        fetchOrdersList();
     }, [])
 
     return (

@@ -4,7 +4,11 @@ import { adminContext } from "../context/GlobalContext"
 import { Pencil, Trash2, Info } from "lucide-react";
 
 const AdminOrders = () => {
-  const { orderList,deleteOrder } = useContext(adminContext)
+  const { orderList, deleteOrder, fetchOrdersList } = useContext(adminContext)
+
+  useEffect(() => {
+    fetchOrdersList()
+  }, [])
 
   const handelRemoveOrder = async (orderId) => {
     await deleteOrder(orderId)
@@ -42,11 +46,11 @@ const AdminOrders = () => {
             <div>
               <div className='flex gap-2'>
                 <span>Order Of :</span>
-                <h2>{order.userId}</h2>
+                <h2>{order.userId?.fullName || order.userId}</h2>
               </div>
               <div className='flex gap-2'>
                 <span>Seller :</span>
-                <h2>  seller</h2>
+                <h2>{order.products[0]?.product?.seller?.fullName || 'N/A'}</h2>
               </div>
             </div>
             <div>
@@ -78,16 +82,18 @@ const AdminOrders = () => {
                   <th>Name</th>
                   <th>Category</th>
                   <th>Quantity</th>
-                  <th>Price</th>
+                  <th>Rate</th>
                   <th>Seller</th>
                 </tr>
               </thead>
               <tbody>
                 {order.products.map((product) => (
                   <tr key={product._id} className='text-center'>
-                    <td className='py-4'>img</td>
-                    <td>product</td>
-                    <td>category</td>
+                    <td className='py-4'>
+                      <img src={product.product?.image} alt={product.product?.productName} className='w-12 h-12 object-cover rounded mx-auto' />
+                    </td>
+                    <td>{product.product?.productName}</td>
+                    <td>{product.product?.category}</td>
                     <td>{product.productQty}</td>
                     <td>{product.price}</td>
                     <td>seller</td>

@@ -3,7 +3,14 @@ const orderModel = require("../models/orderModel");
 
 module.exports.getOrders = async (req, res) => {
     try {
-        const orderItems = await orderModel.find({ userId: req.user._id }).populate("products.product");
+        const orderItems = await orderModel.find({ userId: req.user._id })
+            .populate({
+                path: "products.product",
+                populate: {
+                    path: "seller",
+                    model: "user"
+                }
+            });
         if (!orderItems) {
             return res.status(400).json({ message: 'Invalid Request: Order Not found' })
         }
@@ -23,7 +30,15 @@ module.exports.getOrders = async (req, res) => {
 
 module.exports.getAllOrders = async (req, res) => {
     try {
-        const orders = await orderModel.find().populate("products.product", "userId")
+        const orders = await orderModel.find()
+            .populate("userId")
+            .populate({
+                path: "products.product",
+                populate: {
+                    path: "seller",
+                    model: "user"
+                }
+            })
         if (!orders) {
             return res.status(400).json({ message: 'No order Added' })
         }

@@ -42,7 +42,7 @@ const productSchema = mongoose.Schema({
         default:false,
     },
 }, {
-    timestamp: true
+    timestamps: true
 }
 )
 
