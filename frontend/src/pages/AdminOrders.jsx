@@ -16,7 +16,7 @@ const AdminOrders = () => {
 
   return (
     <div className='min-w-screen  mt-20 flex flex-col gap-8 px-2 py-4'>
-      
+      <h1 className='text-2xl font-bold px-2'>Orders List</h1>
       {!orderList ?
        <div className='text-6xl flex justify-center items-center text-black'>
         NO Order Yet!!
@@ -49,8 +49,8 @@ const AdminOrders = () => {
                 <h2>{order.userId?.fullName || order.userId}</h2>
               </div>
               <div className='flex gap-2'>
-                <span>Seller :</span>
-                <h2>{order.products[0]?.product?.seller?.fullName || 'N/A'}</h2>
+                <span>Email :</span>
+                <h2>{order.userId?.email || 'N/A'}</h2>
               </div>
             </div>
             <div>
@@ -83,6 +83,7 @@ const AdminOrders = () => {
                   <th>Category</th>
                   <th>Quantity</th>
                   <th>Rate</th>
+                  <th>Amount</th>
                   <th>Seller</th>
                 </tr>
               </thead>
@@ -96,7 +97,8 @@ const AdminOrders = () => {
                     <td>{product.product?.category}</td>
                     <td>{product.productQty}</td>
                     <td>{product.price}</td>
-                    <td>seller</td>
+                    <td>{product.price * product.productQty}</td>
+                    <td>{product.product?.seller.fullName}</td>
                   </tr>
                 ))}
 

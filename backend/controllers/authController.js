@@ -181,5 +181,16 @@ const removeCartItems = async (req, res) => {
         console.log("Erron on removeCartItems:", error.message);
         return res.status(500).json({ err: error.message })
     }
+};
+
+const getAllUser = async (req, res) => {
+    try {
+        let users = await userModel.find()
+        res.status(200).json({ success: true, users })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ err: error.message })
+
+    }
 }
-module.exports = { checkAuth, registerUser, loginUser, logoutUser, removeCartItems }
+module.exports = { checkAuth, registerUser, loginUser, logoutUser, removeCartItems, getAllUser }

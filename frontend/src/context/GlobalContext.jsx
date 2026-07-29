@@ -32,6 +32,7 @@ const GlobalContext = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const [orders, setOrders] = useState([]);
     const [orderList, setOrderList] = useState([]);
+    const [users, setUsers] = useState([]);
     const [productForEdit, setProductForEdit] = useState(null)
 
 
@@ -379,7 +380,7 @@ const GlobalContext = ({ children }) => {
 
     const deleteOrder = async (orderId) => {
         try {
-            const res = await axios.delete(`http://localhost:5000/api/orders/delete/${orderId}`,{withCredentials:true})
+            const res = await axios.delete(`http://localhost:5000/api/orders/delete/${orderId}`, { withCredentials: true })
             const result = await res.data;
             if (result.success) {
                 toast.success("Successfully Removed")
@@ -393,6 +394,20 @@ const GlobalContext = ({ children }) => {
         }
 
     }
+
+    const fetchUsers = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/auth/getUsers",{withCredentials:true})
+            const result = await res.data;
+            if (result) {
+                setUsers(result.users)
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+
     useEffect(() => {
         fetchProducts()
         authCheck();
@@ -450,6 +465,8 @@ const GlobalContext = ({ children }) => {
                         fetchOrdersList,
                         orderList,
                         deleteOrder,
+                        fetchUsers,
+                        users,
                     }}>
 
 
