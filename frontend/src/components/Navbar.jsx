@@ -45,7 +45,7 @@ const Navbar = () => {
                                 <div>
                                     {
                                         isSeller ? (
-                                            <>
+                                            <div className="flex gap-4 items-center">
                                                 <Link to="/addproduct" className="hover:text-gray-400 flex flex-col items-center">
                                                     <MdAddBusiness size={24} />
                                                     <span className="text-sm">Add Product</span>
@@ -54,9 +54,9 @@ const Navbar = () => {
                                                     <TbReportAnalyticsFilled size={24} />
                                                     <span className="text-sm">Admin Panel</span>
                                                 </Link>
-                                            </>
+                                            </div>
                                         ) :
-                                            <>
+                                            <div className="flex gap-4 items-center">
                                                 <Link to="/cartItem" className="hover:text-gray-400">
                                                     <FaShoppingCart size={22} />
                                                     <span className="text-sm">Cart</span>
@@ -65,7 +65,7 @@ const Navbar = () => {
                                                     <RiTakeawayLine size={22} />
                                                     <span className="text-sm">Orders</span>
                                                 </Link>
-                                            </>
+                                            </div>
                                     }
                                 </div>
 
