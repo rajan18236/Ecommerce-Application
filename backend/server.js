@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const cors = require("cors");
 const dns =  require("dns");
+const path = require("path")
 
 dns.setServers(["1.1.1.1","8.8.8.8"])
 
@@ -23,12 +24,17 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname,"../frontend/dist")))
 
 app.use('/api/auth', authRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/payments',paymentRouter);
 app.use('/api/orders',orderRouter);
+
+app.get("/{*any}",(req,res)=>{
+    res.sendFile(path.join(__dirname,"../frontend/dist/index.html"))
+})
 
 // Connect to database first
 dbConnection();

@@ -17,6 +17,7 @@ const Navbar = () => {
     const { userLogout, userInfo, isUserLoggedIn, } = useContext(authContext);
 
     const isSeller = userInfo?.role === "seller"
+    const isAdmin = userInfo?.role === "admin"
     const handleLogout = async () => {
         await userLogout();
         navigate("/");
@@ -34,34 +35,42 @@ const Navbar = () => {
 
 
                     {isUserLoggedIn ?
+
                         <>
                             <Link to="/" className="hover:text-gray-400 flex flex-col items-center">
                                 <RiHome5Fill size={24} />
                                 <span className="text-sm">Home</span>
                             </Link>
-                            {isSeller ? (
-                                <>
-                                <Link to="/addproduct" className="hover:text-gray-400 flex flex-col items-center">
-                                    <MdAddBusiness size={24} />
-                                    <span className="text-sm">Add Product</span>
-                                </Link>
-                                <Link to="/adminpanel" className="hover:text-gray-400 flex flex-col items-center">
-                                    <TbReportAnalyticsFilled size={24} />
-                                    <span className="text-sm">Admin Panel</span>
-                                </Link>
-                        </>
-                            ) :
-                            <>
-                                <Link to="/cartItem" className="hover:text-gray-400">
-                                    <FaShoppingCart size={22} />
-                                    <span className="text-sm">Cart</span>
-                                </Link>
-                                <Link to="/orders" className="hover:text-gray-400 flex flex-col items-center">
-                                    <RiTakeawayLine size={22} />
-                                    <span className="text-sm">Orders</span>
-                                </Link>
-                                </>
+                            {isAdmin ? null :
+                                <div>
+                                    {
+                                        isSeller ? (
+                                            <>
+                                                <Link to="/addproduct" className="hover:text-gray-400 flex flex-col items-center">
+                                                    <MdAddBusiness size={24} />
+                                                    <span className="text-sm">Add Product</span>
+                                                </Link>
+                                                <Link to="/adminpanel" className="hover:text-gray-400 flex flex-col items-center">
+                                                    <TbReportAnalyticsFilled size={24} />
+                                                    <span className="text-sm">Admin Panel</span>
+                                                </Link>
+                                            </>
+                                        ) :
+                                            <>
+                                                <Link to="/cartItem" className="hover:text-gray-400">
+                                                    <FaShoppingCart size={22} />
+                                                    <span className="text-sm">Cart</span>
+                                                </Link>
+                                                <Link to="/orders" className="hover:text-gray-400 flex flex-col items-center">
+                                                    <RiTakeawayLine size={22} />
+                                                    <span className="text-sm">Orders</span>
+                                                </Link>
+                                            </>
+                                    }
+                                </div>
+
                             }
+
                             <button
                                 onClick={handleLogout}
                                 className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 ml-8 transition"
@@ -92,7 +101,7 @@ const Navbar = () => {
 
                 </ul>
             </div>
-        </div>
+        </div >
     )
 }
 

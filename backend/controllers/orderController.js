@@ -3,7 +3,14 @@ const orderModel = require("../models/orderModel");
 
 module.exports.getOrders = async (req, res) => {
     try {
-        const orderItems = await orderModel.find({ userId: req.user._id }).populate("products.product");
+        const orderItems = await orderModel.find({ userId: req.user._id })
+            .populate({
+                path: "products.product",
+                populate: {
+                    path: "seller",
+                    model: "user"
+                }
+            });
         if (!orderItems) {
             return res.status(400).json({ message: 'Invalid Request: Order Not found' })
         }
@@ -24,12 +31,35 @@ module.exports.getOrders = async (req, res) => {
 module.exports.getAllOrders = async (req, res) => {
     try {
         const orders = await orderModel.find()
+            .populate("userId")
+            .populate({
+                path: "products.product",
+                populate: {
+                    path: "seller",
+                    model: "user"
+                }
+            })
         if (!orders) {
             return res.status(400).json({ message: 'No order Added' })
         }
         res.status(200).json({ success: true, orders })
     } catch (error) {
-        console.log("Error on getAllOrder:",error.message);
+        console.log("Error on getAllOrder:", error.message);
         return res.status(500).json({ success: false, error: error.message })
+    }
+};
+
+module.exports.deleteOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params
+        const order = await orderModel.findByIdAndDelete(orderId)
+        if (!order) {
+            return res.status(400).json({ success: false, message: 'Order not found' })
+        }
+        res.status(200).json({ success: true, message: 'successfully removed' })
+    } catch (error) {
+        console.log('error on deleteOrder:', error.message);
+        return res.status(500).json({ err: error.message })
+
     }
 }

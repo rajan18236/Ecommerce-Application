@@ -32,6 +32,7 @@ const GlobalContext = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const [orders, setOrders] = useState([]);
     const [orderList, setOrderList] = useState([]);
+    const [users, setUsers] = useState([]);
     const [productForEdit, setProductForEdit] = useState(null)
 
 
@@ -367,7 +368,7 @@ const GlobalContext = ({ children }) => {
 
     const fetchOrdersList = async () => {
         try {
-            const res = await axios.get('https://ecommerce-application-sfmh.onrender.com/api/orders/getAll',{withCredentials:true})
+            const res = await axios.get('http://localhost:5000/api/orders/getAll',{withCredentials:true})
             const result = await res.data;
             setOrderList(result.orders)
 
@@ -376,10 +377,40 @@ const GlobalContext = ({ children }) => {
 
         }
     }
+
+    const deleteOrder = async (orderId) => {
+        try {
+            const res = await axios.delete(`http://localhost:5000/api/orders/delete/${orderId}`, { withCredentials: true })
+            const result = await res.data;
+            if (result.success) {
+                toast.success("Successfully Removed")
+                fetchOrdersList()
+                return;
+            }
+            toast.error("Something went wrong")
+        } catch (error) {
+            console.error(error.message);
+
+        }
+
+    }
+
+    const fetchUsers = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/auth/getUsers",{withCredentials:true})
+            const result = await res.data;
+            if (result) {
+                setUsers(result.users)
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+
     useEffect(() => {
         fetchProducts()
         authCheck();
-        fetchOrdersList();
     }, [])
 
     return (
@@ -432,7 +463,10 @@ const GlobalContext = ({ children }) => {
                 }}>
                     <adminContext.Provider value={{
                         fetchOrdersList,
-                        orderList
+                        orderList,
+                        deleteOrder,
+                        fetchUsers,
+                        users,
                     }}>
 
 

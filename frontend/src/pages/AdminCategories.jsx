@@ -2,7 +2,10 @@ import React from 'react'
 
 const AdminCategories = () => {
   return (
-    <div>AdminCategories</div>
+    <div>
+      <div>
+      </div>
+    </div>
   )
 }
 
