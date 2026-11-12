@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({limit:'10mb'}));
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173", // React app
+    origin: "https://ecommerce-application-sfmh.onrender.com", // React app
     credentials: true,
 }));
 app.use(express.urlencoded({ extended: true }));
