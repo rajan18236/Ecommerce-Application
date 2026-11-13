@@ -38,7 +38,7 @@ const GlobalContext = ({ children }) => {
 
     const userRegistration = async () => {
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/register", {
+            const res = await axios.post("https://ecommerce-application-sfmh.onrender.com/api/auth/register", {
                 fullName: signUpUserData.fullName,
                 email: signUpUserData.email,
                 password: signUpUserData.password,
@@ -73,7 +73,7 @@ const GlobalContext = ({ children }) => {
 
     const userLogin = async () => {
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/login", { email: loginUserData.email, password: loginUserData.password }, { withCredentials: true });
+            const res = await axios.post("https://ecommerce-application-sfmh.onrender.com/api/auth/login", { email: loginUserData.email, password: loginUserData.password }, { withCredentials: true });
             const result = await res.data;
             if (result.success) {
                 setLoginUserData({ email: "", password: "" })
@@ -91,7 +91,7 @@ const GlobalContext = ({ children }) => {
     const userLogout = async () => {
         try {
             await axios.post(
-                "http://localhost:5000/api/auth/logout",
+                "https://ecommerce-application-sfmh.onrender.com/api/auth/logout",
                 {},
                 {
                     withCredentials: true,
@@ -111,7 +111,7 @@ const GlobalContext = ({ children }) => {
 
     const addToCart = async (productId) => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/cart/addToCart`, { product: productId }, { withCredentials: true })
+            const res = await axios.put(`https://ecommerce-application-sfmh.onrender.com/api/cart/addToCart`, { product: productId }, { withCredentials: true })
             const result = await res.data;
             if (!result.success) {
                 return toast('Removed from Cart', {
@@ -130,7 +130,7 @@ const GlobalContext = ({ children }) => {
 
     const removeFromCart = async (cartItemId) => {
         try {
-            const res = await axios.delete('http://localhost:5000/api/cart/removeFromCart', {
+            const res = await axios.delete('https://ecommerce-application-sfmh.onrender.com/api/cart/removeFromCart', {
                 data: { cartItemId },
                 withCredentials: true,
             })
@@ -148,7 +148,7 @@ const GlobalContext = ({ children }) => {
     const updateCartItem = async (cartId, qty) => {
         console.log(cartId, qty);
         try {
-            const res = await axios.patch(`http://localhost:5000/api/cart/updateCart`, { cartId, qty }, { withCredentials: true })
+            const res = await axios.patch(`https://ecommerce-application-sfmh.onrender.com/api/cart/updateCart`, { cartId, qty }, { withCredentials: true })
         } catch (error) {
             console.error(error.message);
 
@@ -157,7 +157,7 @@ const GlobalContext = ({ children }) => {
 
     const fetchCartItems = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/cart/getAllCartItems`, { withCredentials: true })
+            const res = await axios.get(`https://ecommerce-application-sfmh.onrender.com/api/cart/getAllCartItems`, { withCredentials: true })
             const result = await res.data;
             if (result.success) {
                 setCartItems(result.items)
@@ -171,7 +171,7 @@ const GlobalContext = ({ children }) => {
 
     const authCheck = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/auth/me`, { withCredentials: true })
+            const res = await axios.get(`https://ecommerce-application-sfmh.onrender.com/api/auth/me`, { withCredentials: true })
             const result = res.data
             if (result.success) {
                 setIsUserLoggedIn(true);
@@ -194,7 +194,7 @@ const GlobalContext = ({ children }) => {
 
     const addProduct = async (imageOverride, product) => {
         try {
-            const res = await axios.post(`http://localhost:5000/api/product/create`, {
+            const res = await axios.post(`https://ecommerce-application-sfmh.onrender.com/api/product/create`, {
                 productName: product.productName,
                 price: product.price,
                 stock: product.stock,
@@ -223,7 +223,7 @@ const GlobalContext = ({ children }) => {
 
     const fetchProducts = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/product/getAll`, { withCredentials: true })
+            const res = await axios.get(`https://ecommerce-application-sfmh.onrender.com/api/product/getAll`, { withCredentials: true })
             const result = await res.data;
             setFeaturedProducts(result.products)
             return result
@@ -236,7 +236,7 @@ const GlobalContext = ({ children }) => {
     const fetchOrders = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:5000/api/orders/my-orders",
+                "https://ecommerce-application-sfmh.onrender.com/api/orders/my-orders",
                 {
                     withCredentials: true,
                 }
@@ -254,7 +254,7 @@ const GlobalContext = ({ children }) => {
 
     const fetchProductsByCategory = async (category) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/product/category/${category}`)
+            const res = await axios.get(`https://ecommerce-application-sfmh.onrender.com/api/product/category/${category}`)
             const result = await res.data;
             setCaterogyItems(result.products)
             return result
@@ -266,7 +266,7 @@ const GlobalContext = ({ children }) => {
     const stripePayment = async () => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/payments/create-checkout-session",
+                "https://ecommerce-application-sfmh.onrender.com/api/payments/create-checkout-session",
                 {
                     products: cartItems,
                 },
@@ -282,7 +282,7 @@ const GlobalContext = ({ children }) => {
 
     const clearCart = async () => {
         setCartItems([])
-        const res = await axios.get(`http://localhost:5000/api/auth/clearCartItems`, {
+        const res = await axios.get(`https://ecommerce-application-sfmh.onrender.com/api/auth/clearCartItems`, {
             withCredentials: true,
         })
     };
@@ -290,7 +290,7 @@ const GlobalContext = ({ children }) => {
     const fetchMyProducts = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:5000/api/product/my-products",
+                "https://ecommerce-application-sfmh.onrender.com/api/product/my-products",
                 {
                     withCredentials: true,
                 }
@@ -304,7 +304,7 @@ const GlobalContext = ({ children }) => {
     const deleteProduct = async (id) => {
         try {
             await axios.delete(
-                `http://localhost:5000/api/product/delete/${id}`,
+                `https://ecommerce-application-sfmh.onrender.com/api/product/delete/${id}`,
                 {
                     withCredentials: true,
                 }
@@ -321,7 +321,7 @@ const GlobalContext = ({ children }) => {
     const fetchProductById = async (id) => {
         try {
             const res = await axios.get(
-                `http://localhost:5000/api/product/${id}`,
+                `https://ecommerce-application-sfmh.onrender.com/api/product/${id}`,
                 {
                     withCredentials: true,
                 }
@@ -336,7 +336,7 @@ const GlobalContext = ({ children }) => {
 
     const editProduct = async (productId) => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/product/edit`, {
+            const res = await axios.put(`https://ecommerce-application-sfmh.onrender.com/api/product/edit`, {
                 productData: productForEdit
             }, { withCredentials: true })
             setProductForEdit(
@@ -354,7 +354,7 @@ const GlobalContext = ({ children }) => {
 
     const disableProducts = async (productId, isBlocked) => {
         try {
-            const res = await axios.patch('http://localhost:5000/api/product/disable', {
+            const res = await axios.patch('https://ecommerce-application-sfmh.onrender.com/api/product/disable', {
                 productId,
                 isBlocked
             }, {
@@ -368,7 +368,7 @@ const GlobalContext = ({ children }) => {
 
     const fetchOrdersList = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/orders/getAll', { withCredentials: true })
+            const res = await axios.get('http://localhost:5000/api/orders/getAll',{withCredentials:true})
             const result = await res.data;
             setOrderList(result.orders)
 

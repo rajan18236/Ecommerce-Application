@@ -14,7 +14,7 @@ const PurchaseSuccessPage = () => {
 	useEffect(() => {
 		const handleCheckoutSuccess = async (sessionId) => {
 			try {
-				const res = await axios.post("http://localhost:5000/api/payments/checkout-success", {
+				const res = await axios.post("https://ecommerce-application-sfmh.onrender.com/api/payments/checkout-success", {
 					sessionId,
 				}, { withCredentials: true });
 				const result = await res.data;
